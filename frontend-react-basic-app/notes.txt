@@ -1,0 +1,25 @@
+https://stackoverflow.com/questions/23296094/browserify-how-to-call-function-bundled-in-a-file-generated-through-browserify
+https://stackoverflow.com/questions/41117421/ps1-cannot-be-loaded-because-running-scripts-is-disabled-on-this-system
+
+npm uninstall browserify --save
+npm install browserify -g
+npm install browserify-shim -- save
+
+var crypto = require('crypto');
+ function myfunc(a, b) {
+    var salt = crypto.randomBytes(16).toString('hex');
+    return a+b;
+}
+exports.myfunc = myfunc;
+
+npm install esmify --save-dev
+
+browserify src/sum.js -p esmify --standalone mybundle > bundle.js
+
+  <script>
+    console.log(mybundle.myfunc(3,4));
+  </script>
+
+  //or direct call from js file no import need
+  mybundle.myfunc(3,4)
+
