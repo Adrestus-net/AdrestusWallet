@@ -1,5 +1,5 @@
 # AdrestusWallet
-Officially supported wallet of Adrestus cryptocurrency publicly available
+Officially supported wallet of Adrestus cryptocurrency publicly available **Under Maintenance**
 ## Overview
 Welcome to the code that powers Adrestus Wallet! This repo will always 
 contain the source code for the latest publicly available Adrestus Wallet 
