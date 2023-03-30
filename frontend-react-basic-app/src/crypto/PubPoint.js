@@ -8,11 +8,11 @@ module.exports =class PubPoint{
         this.#YAXIS=YAXIS;
     }
 
-    get geX_AXIS() {
+    get geXAxis() {
         return this.#X_AXIS;
     }
 
-    get getYAXIS() {
+    get getYAxis() {
         return this.#YAXIS;
     }
 }

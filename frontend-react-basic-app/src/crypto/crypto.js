@@ -4,19 +4,20 @@ let ec = new elliptic.ec('secp256k1');
 const hash = crypto.createHash('sha256');
 var assert = require('assert');
 var mnemonic=require("./Mnemonic")
-var adr_keypair=require("../Data/Keypair")
+var adr_keypair=require("./Keypair")
 var wallet=require("./WalletAddress")
 const WalletAddress = require("./WalletAddress");
 
 
-
+var mnmemo=new mnemonic(128).create();
 const ALGORITHM='SHA-512'
 var SALT='mnemonic'
 var derivedKey
 var mnemonic_array = "sample sail jungle learn general promote task puppy own conduct green affair";//.split("");
 var passphrase_array = "p4ssphr4se";//.split("");
-var mnmemo=new mnemonic().createSeed(mnemonic_array,passphrase_array)
+var mnmemo=new mnemonic(128).createSeed(mnemonic_array,passphrase_array)
 var custom_keypair=new adr_keypair(mnmemo)
+var xaxis=custom_keypair.getPubPoint.geXAxis;
 var address=new WalletAddress();
 var addres=address.generate_address(Buffer.from("0"),custom_keypair.getPublic_key)
 var SALT=SALT.concat(passphrase_array);

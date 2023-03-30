@@ -3,7 +3,7 @@ var RIPEMD160 = require('ripemd160')
 const hash = crypto.createHash('sha256');
 var ripemd160stream = new RIPEMD160()
 var base32 = require('hi-base32');
-var adr_keypair=require("../Data/Keypair")
+var adr_keypair=require("./Keypair")
 
 
 adr_keypair=new adr_keypair("sad","sda")
