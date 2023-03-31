@@ -1,55 +1,17 @@
-//import {mybundle} from "../bundle.js";
+//import {wallbundle} from "../src/bundle/WalletBundle.js";
 
-console.log(mybundle.myfunc(3,8))
-function greeting() {
-    let message = 'Hi';
-
-    function sayHi() {
-        message+="val"
-        console.log(message);
-    }
-
-    return sayHi;
-}
-let hi = greeting();
-hi();
-hi();
-greeting();
-var person=thermostat()
-var p=new person("my name")
-console.log(p.name)
-const arrq=["jan","feb"];
-const arr2=arrq;
-const arr3=[...arrq];
-arrq[0]="diff";
-let a=3;
-const b=true;
-var myGlobal=10
-fun2()
-const arr = ['bobby', 'hadz', 'com'];
-
-const array=[[1,2],[3,4],[5,6,7,8]]
-
-for(var i=0;i<array.length;i++) {
-    for(var j=0;j<array[i].length;j++)
-        console.log("here"+array[i][j]);
-}
-let v=5;
-function  fun1(){
-    let var_a=4;
-}
-
-function fun2(){
-    console.log(myGlobal)
-}
-
-function thermostat(){
-    class Person{
-        constructor(name) {
-            this.name=name
-        }
-    }
-
-    return Person;
-}
+//import keypair from "./crypto/Keypair";
+let keys = new mybundle2('fd8cee9c1a3f3f57ab51b25740b24341ae093c8f697fde4df948050d3acd1700f6379d716104d2159e4912509c40ac81714d833e93b822e5ba0fadd68d5568a2');
+console.log(keys.getPublicKey)
+var wallet=new mybundle3();
+var address=wallet.generate_address("0","04104afaf5a596a835d6d2039059a6a864af698a1611b6667b6bbaa68887af6f362b20bbac2b35be4bdd72bb6c2bd6b9e9820ab6e3ec9288c72471f7a9c4b69a65");
+var sig=new signaturebundle();
+var message="dd6d5849a507fc670db1c9ce77fea2166658e1c9b697b33ee9e1d07c03290da3"
+var signature=sig.sign(keys.getKeypair,message);
+var res=sig.verify(message,signature);
+let mnemonic_array = "bench hurt jump file august wise shallow faculty impulse spring exact slush thunder author capable act festival slice deposit sauce coconut afford frown better";
+let passphrase = "p4ssphr4se";
+var mnem=new mnembundle(256);
+var seed=mnem.createSeed(mnemonic_array,passphrase);
+var g=4;
 

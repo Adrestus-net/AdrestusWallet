@@ -15,7 +15,10 @@ exports.myfunc = myfunc;
 npm install esmify --save-dev
 
 browserify src/sum.js -p esmify --standalone mybundle > bundle.js
-
+browserify src/crypto/Keypair.js -p esmify --standalone keybundle > src/bundle/KeypairBundle.js
+browserify src/crypto/Mnemonic.js -p esmify --standalone mnembundle > src/bundle/MnemonicBundle.js
+browserify src/crypto/WalletAddress.js -p esmify --standalone wallbundle > src/bundle/WalletBundle.js
+browserify src/crypto/ECDSASignature.js -p esmify --standalone signaturebundle > src/bundle/SignatureBundle.js
   <script>
     console.log(mybundle.myfunc(3,4));
   </script>

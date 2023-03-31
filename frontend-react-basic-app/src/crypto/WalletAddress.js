@@ -14,20 +14,21 @@ module.exports=class WalletAddress {
     }
 
      generate_address(version, pubkey) {
+        var version=Buffer.from(version);
         const hash = crypto.createHash('sha256');
         var sha256PublicKeyHash=hash.update(pubkey).digest();
 
         var ripemd160StepOneHash=new RIPEMD160().update(sha256PublicKeyHash).digest();
         var versionPrefixedRipemd160Hash=Buffer.concat([version,ripemd160StepOneHash],version.length+ripemd160StepOneHash.length);
-        var stepThreeChecksum=this.#generateChecksum(versionPrefixedRipemd160Hash);
+        var stepThreeChecksum=this.generateChecksum(versionPrefixedRipemd160Hash);
         var concatStepThreeAndStepSix=Buffer.concat([versionPrefixedRipemd160Hash,stepThreeChecksum],versionPrefixedRipemd160Hash.length+stepThreeChecksum.length);
         var HG=concatStepThreeAndStepSix.toString('hex')
         var encoded = base32.encode(concatStepThreeAndStepSix);
 
-       return this.#preety_print(encoded);
+       return this.preety_print(encoded);
     }
 
-     #preety_print(encoded){
+     preety_print(encoded){
         let res= this.ADR_CHECKSUM.concat(encoded)
         let parts = encoded.match(/.{1,4}/g);
         let encoded_seperators = parts.join(this.SEPERATOR);
@@ -35,7 +36,7 @@ module.exports=class WalletAddress {
         return final;
     }
 
-     #generateChecksum(versionPrefixedRipemd160Hash){
+     generateChecksum(versionPrefixedRipemd160Hash){
         let hash = crypto.createHash('sha256');
         let sha3StepThreeHash=hash.update(versionPrefixedRipemd160Hash).digest();
         let arr2=[];
