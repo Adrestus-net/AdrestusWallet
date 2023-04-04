@@ -1,7 +1,8 @@
 var elliptic = require('elliptic');
 var ec = new elliptic.ec('secp256k1');
-var Point=require("./PubPoint")
-module.exports =class Keypair{
+var Point = require("./PubPoint")
+const BN = require('bn.js');
+module.exports = class Keypair {
 
 
     ec
@@ -11,12 +12,14 @@ module.exports =class Keypair{
 
     PubPoint
 
+    PubBigInteger
     Y_Axis
+
     constructor(random) {
         this.Keypair = ec.keyFromPrivate(random);
-        this.private_key=this.Keypair.getPrivate("hex");
-        this.public_key=this.Keypair.getPublic("hex")
-        this.PubPoint = new Point(this.Keypair.getPublic().getX().toString(),this.Keypair.getPublic().getY().toString());
+        this.private_key = this.Keypair.getPrivate("hex");
+        this.public_key = this.Keypair.getPublic("hex")
+        this.PubPoint = new Point(this.Keypair.getPublic().getX().toString(), this.Keypair.getPublic().getY().toString());
     }
 
     get getKeypair() {
@@ -33,5 +36,9 @@ module.exports =class Keypair{
 
     get getPubPoint() {
         return this.PubPoint;
+    }
+
+    get getPubBigInteger() {
+        return new BN(this.Keypair.getPublic().encode('hex').substr(2), 16).toString();
     }
 }
