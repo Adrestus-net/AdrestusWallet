@@ -28,4 +28,7 @@ public class TransactionService {
     public ResponseDao getTransactionsByAddress(String address) {
         return this.KVRepository.getTransactionsByAddress(address);
     }
+    public int deleteALL() {
+        return this.KVRepository.deleteALL();
+    }
 }

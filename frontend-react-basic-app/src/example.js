@@ -1,6 +1,6 @@
 //import assert from "assert";
 //import {wallbundle} from "../src/bundle/WalletBundle.js";
-
+// browserify src/crypto/Mnemonic.js --standalone myBundle > src/bundle/WalletBundle2.js
 import TransactionDB from './Storage/TransactionDB.js';
 import CredentialsDB from './Storage/CredentialsDB.js';
 var db = await TransactionDB.create();

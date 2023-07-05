@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TransactionDataAccessRepository implements KVRepository {
 
     private static List<TransactionDao> memorydb = new ArrayList<>();
-    private final IDatabase<String, LevelDBTransactionWrapper<Transaction>> database;
+    private IDatabase<String, LevelDBTransactionWrapper<Transaction>> database;
 
     public TransactionDataAccessRepository() {
         this.database = new DatabaseFactory(String.class, Transaction.class, new TypeToken<LevelDBTransactionWrapper<Transaction>>() {
@@ -54,5 +54,11 @@ public class TransactionDataAccessRepository implements KVRepository {
             return new ResponseDao(from, to);
         }
         return null;
+    }
+
+    @Override
+    public int deleteALL() {
+        database.erase_db();
+        return 0;
     }
 }
