@@ -3,7 +3,7 @@ var crypto = require('crypto')
 var RIPEMD160 = require('ripemd160')
 var base32 = require('hi-base32');
 var Util=require("./Util.js")
-module.exports=class WalletAddress {
+class WalletAddress {
     SEPERATOR
     ADR_CHECKSUM;
     ADR_CHECKSUM_BYTES
@@ -44,3 +44,4 @@ module.exports=class WalletAddress {
         return Buffer.from(arr2);
     }
 }
+global.WalletAddress = WalletAddress;

@@ -2,7 +2,7 @@ package io.Adrestus.Backend.Repository;
 
 import com.google.common.reflect.TypeToken;
 import io.Adrestus.Backend.Util.HelperConvertDAO;
-import io.Adrestus.Backend.model.ResponseDao;
+import io.Adrestus.Backend.payload.response.ResponseDao;
 import io.Adrestus.Backend.model.TransactionDao;
 import io.Adrestus.core.Transaction;
 import io.distributedLedger.DatabaseFactory;

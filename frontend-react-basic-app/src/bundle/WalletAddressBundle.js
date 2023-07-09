@@ -26359,144 +26359,510 @@ function config (name) {
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],187:[function(require,module,exports){
-(function (process,Buffer){(function (){
-!function(globals){
-'use strict'
+arguments[4][102][0].apply(exports,arguments)
+},{"dup":102,"inherits":204,"readable-stream":202,"safe-buffer":206}],188:[function(require,module,exports){
+arguments[4][47][0].apply(exports,arguments)
+},{"dup":47}],189:[function(require,module,exports){
+arguments[4][48][0].apply(exports,arguments)
+},{"./_stream_readable":191,"./_stream_writable":193,"_process":149,"dup":48,"inherits":204}],190:[function(require,module,exports){
+arguments[4][49][0].apply(exports,arguments)
+},{"./_stream_transform":192,"dup":49,"inherits":204}],191:[function(require,module,exports){
+arguments[4][50][0].apply(exports,arguments)
+},{"../errors":188,"./_stream_duplex":189,"./internal/streams/async_iterator":194,"./internal/streams/buffer_list":195,"./internal/streams/destroy":196,"./internal/streams/from":198,"./internal/streams/state":200,"./internal/streams/stream":201,"_process":149,"buffer":63,"dup":50,"events":100,"inherits":204,"string_decoder/":207,"util":19}],192:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"../errors":188,"./_stream_duplex":189,"dup":51,"inherits":204}],193:[function(require,module,exports){
+arguments[4][52][0].apply(exports,arguments)
+},{"../errors":188,"./_stream_duplex":189,"./internal/streams/destroy":196,"./internal/streams/state":200,"./internal/streams/stream":201,"_process":149,"buffer":63,"dup":52,"inherits":204,"util-deprecate":208}],194:[function(require,module,exports){
+arguments[4][53][0].apply(exports,arguments)
+},{"./end-of-stream":197,"_process":149,"dup":53}],195:[function(require,module,exports){
+arguments[4][54][0].apply(exports,arguments)
+},{"buffer":63,"dup":54,"util":19}],196:[function(require,module,exports){
+arguments[4][55][0].apply(exports,arguments)
+},{"_process":149,"dup":55}],197:[function(require,module,exports){
+arguments[4][56][0].apply(exports,arguments)
+},{"../../../errors":188,"dup":56}],198:[function(require,module,exports){
+arguments[4][57][0].apply(exports,arguments)
+},{"dup":57}],199:[function(require,module,exports){
+arguments[4][58][0].apply(exports,arguments)
+},{"../../../errors":188,"./end-of-stream":197,"dup":58}],200:[function(require,module,exports){
+arguments[4][59][0].apply(exports,arguments)
+},{"../../../errors":188,"dup":59}],201:[function(require,module,exports){
+arguments[4][60][0].apply(exports,arguments)
+},{"dup":60,"events":100}],202:[function(require,module,exports){
+arguments[4][61][0].apply(exports,arguments)
+},{"./lib/_stream_duplex.js":189,"./lib/_stream_passthrough.js":190,"./lib/_stream_readable.js":191,"./lib/_stream_transform.js":192,"./lib/_stream_writable.js":193,"./lib/internal/streams/end-of-stream.js":197,"./lib/internal/streams/pipeline.js":199,"dup":61}],203:[function(require,module,exports){
+(function (process,global){(function (){
+/*
+ * [hi-base32]{@link https://github.com/emn178/hi-base32}
+ *
+ * @version 0.5.0
+ * @author Chen, Yi-Cyuan [emn178@gmail.com]
+ * @copyright Chen, Yi-Cyuan 2015-2018
+ * @license MIT
+ */
+/*jslint bitwise: true */
+(function () {
+  'use strict';
 
-//*** UMD BEGIN
-if (typeof define !== 'undefined' && define.amd) { //require.js / AMD
-  define([], function() {
-    return secureRandom
-  })
-} else if (typeof module !== 'undefined' && module.exports) { //CommonJS
-  module.exports = secureRandom
-} else { //script / browser
-  globals.secureRandom = secureRandom
-}
-//*** UMD END
-
-//options.type is the only valid option
-function secureRandom(count, options) {
-  options = options || {type: 'Array'}
-  //we check for process.pid to prevent browserify from tricking us
-  if (
-    typeof process != 'undefined'
-    && typeof process.pid == 'number'
-    && process.versions
-    && process.versions.node
-  ) {
-    return nodeRandom(count, options)
-  } else {
-    var crypto = window.crypto || window.msCrypto
-    if (!crypto) throw new Error("Your browser does not support window.crypto.")
-    return browserRandom(count, options)
+  var root = typeof window === 'object' ? window : {};
+  var NODE_JS = !root.HI_BASE32_NO_NODE_JS && typeof process === 'object' && process.versions && process.versions.node;
+  if (NODE_JS) {
+    root = global;
   }
-}
+  var COMMON_JS = !root.HI_BASE32_NO_COMMON_JS && typeof module === 'object' && module.exports;
+  var AMD = typeof define === 'function' && define.amd;
+  var BASE32_ENCODE_CHAR = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567'.split('');
+  var BASE32_DECODE_CHAR = {
+    'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8,
+    'J': 9, 'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16,
+    'R': 17, 'S': 18, 'T': 19, 'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24,
+    'Z': 25, '2': 26, '3': 27, '4': 28, '5': 29, '6': 30, '7': 31
+  };
 
-function nodeRandom(count, options) {
-  var crypto = require('crypto')
-  var buf = crypto.randomBytes(count)
+  var blocks = [0, 0, 0, 0, 0, 0, 0, 0];
 
-  switch (options.type) {
-    case 'Array':
-      return [].slice.call(buf)
-    case 'Buffer':
-      return buf
-    case 'Uint8Array':
-      var arr = new Uint8Array(count)
-      for (var i = 0; i < count; ++i) { arr[i] = buf.readUInt8(i) }
-      return arr
-    default:
-      throw new Error(options.type + " is unsupported.")
-  }
-}
-
-function browserRandom(count, options) {
-  var nativeArr = new Uint8Array(count)
-  var crypto = window.crypto || window.msCrypto
-  crypto.getRandomValues(nativeArr)
-
-  switch (options.type) {
-    case 'Array':
-      return [].slice.call(nativeArr)
-    case 'Buffer':
-      try { var b = new Buffer(1) } catch(e) { throw new Error('Buffer not supported in this environment. Use Node.js or Browserify for browser support.')}
-      return new Buffer(nativeArr)
-    case 'Uint8Array':
-      return nativeArr
-    default:
-      throw new Error(options.type + " is unsupported.")
-  }
-}
-
-secureRandom.randomArray = function(byteCount) {
-  return secureRandom(byteCount, {type: 'Array'})
-}
-
-secureRandom.randomUint8Array = function(byteCount) {
-  return secureRandom(byteCount, {type: 'Uint8Array'})
-}
-
-secureRandom.randomBuffer = function(byteCount) {
-  return secureRandom(byteCount, {type: 'Buffer'})
-}
-
-
-}(this);
-
-}).call(this)}).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":149,"buffer":63,"crypto":19}],188:[function(require,module,exports){
-(function (global,Buffer){(function (){
-var crypto = require('crypto')
-var secureRandom = require('secure-random')
-var Util=require("./Util.js")
-
-const ALGORITHM='sha512'
-class Mnemonic{
-    //SALT_CHARS;
-    //WordList;
-
-    //Strength;
-    constructor(Strength) {
-        this.Strength=Strength;
-        this.SALT_CHARS = Buffer.from(['m', 'n', 'e', 'm', 'o', 'n', 'i', 'c'])
-        this.WordList=["abandon", "ability", "able", "about", "above", "absent", "absorb", "abstract", "absurd", "abuse", "access", "accident", "account", "accuse", "achieve", "acid", "acoustic", "acquire", "across", "act", "action", "actor", "actress", "actual", "adapt", "add", "addict", "address", "adjust", "admit", "adult", "advance", "advice", "aerobic", "affair", "afford", "afraid", "again", "age", "agent", "agree", "ahead", "aim", "air", "airport", "aisle", "alarm", "album", "alcohol", "alert", "alien", "all", "alley", "allow", "almost", "alone", "alpha", "already", "also", "alter", "always", "amateur", "amazing", "among", "amount", "amused", "analyst", "anchor", "ancient", "anger", "angle", "angry", "animal", "ankle", "announce", "annual", "another", "answer", "antenna", "antique", "anxiety", "any", "apart", "apology", "appear", "apple", "approve", "april", "arch", "arctic", "area", "arena", "argue", "arm", "armed", "armor", "army", "around", "arrange", "arrest", "arrive", "arrow", "art", "artefact", "artist", "artwork", "ask", "aspect", "assault", "asset", "assist", "assume", "asthma", "athlete", "atom", "attack", "attend", "attitude", "attract", "auction", "audit", "august", "aunt", "author", "auto", "autumn", "average", "avocado", "avoid", "awake", "aware", "away", "awesome", "awful", "awkward", "axis", "baby", "bachelor", "bacon", "badge", "bag", "balance", "balcony", "ball", "bamboo", "banana", "banner", "bar", "barely", "bargain", "barrel", "base", "basic", "basket", "battle", "beach", "bean", "beauty", "because", "become", "beef", "before", "begin", "behave", "behind", "believe", "below", "belt", "bench", "benefit", "best", "betray", "better", "between", "beyond", "bicycle", "bid", "bike", "bind", "biology", "bird", "birth", "bitter", "black", "blade", "blame", "blanket", "blast", "bleak", "bless", "blind", "blood", "blossom", "blouse", "blue", "blur", "blush", "board", "boat", "body", "boil", "bomb", "bone", "bonus", "book", "boost", "border", "boring", "borrow", "boss", "bottom", "bounce", "box", "boy", "bracket", "brain", "brand", "brass", "brave", "bread", "breeze", "brick", "bridge", "brief", "bright", "bring", "brisk", "broccoli", "broken", "bronze", "broom", "brother", "brown", "brush", "bubble", "buddy", "budget", "buffalo", "build", "bulb", "bulk", "bullet", "bundle", "bunker", "burden", "burger", "burst", "bus", "business", "busy", "butter", "buyer", "buzz", "cabbage", "cabin", "cable", "cactus", "cage", "cake", "call", "calm", "camera", "camp", "can", "canal", "cancel", "candy", "cannon", "canoe", "canvas", "canyon", "capable", "capital", "captain", "car", "carbon", "card", "cargo", "carpet", "carry", "cart", "case", "cash", "casino", "castle", "casual", "cat", "catalog", "catch", "category", "cattle", "caught", "cause", "caution", "cave", "ceiling", "celery", "cement", "census", "century", "cereal", "certain", "chair", "chalk", "champion", "change", "chaos", "chapter", "charge", "chase", "chat", "cheap", "check", "cheese", "chef", "cherry", "chest", "chicken", "chief", "child", "chimney", "choice", "choose", "chronic", "chuckle", "chunk", "churn", "cigar", "cinnamon", "circle", "citizen", "city", "civil", "claim", "clap", "clarify", "claw", "clay", "clean", "clerk", "clever", "click", "client", "cliff", "climb", "clinic", "clip", "clock", "clog", "close", "cloth", "cloud", "clown", "club", "clump", "cluster", "clutch", "coach", "coast", "coconut", "code", "coffee", "coil", "coin", "collect", "color", "column", "combine", "come", "comfort", "comic", "common", "company", "concert", "conduct", "confirm", "congress", "connect", "consider", "control", "convince", "cook", "cool", "copper", "copy", "coral", "core", "corn", "correct", "cost", "cotton", "couch", "country", "couple", "course", "cousin", "cover", "coyote", "crack", "cradle", "craft", "cram", "crane", "crash", "crater", "crawl", "crazy", "cream", "credit", "creek", "crew", "cricket", "crime", "crisp", "critic", "crop", "cross", "crouch", "crowd", "crucial", "cruel", "cruise", "crumble", "crunch", "crush", "cry", "crystal", "cube", "culture", "cup", "cupboard", "curious", "current", "curtain", "curve", "cushion", "custom", "cute", "cycle", "dad", "damage", "damp", "dance", "danger", "daring", "dash", "daughter", "dawn", "day", "deal", "debate", "debris", "decade", "december", "decide", "decline", "decorate", "decrease", "deer", "defense", "define", "defy", "degree", "delay", "deliver", "demand", "demise", "denial", "dentist", "deny", "depart", "depend", "deposit", "depth", "deputy", "derive", "describe", "desert", "design", "desk", "despair", "destroy", "detail", "detect", "develop", "device", "devote", "diagram", "dial", "diamond", "diary", "dice", "diesel", "diet", "differ", "digital", "dignity", "dilemma", "dinner", "dinosaur", "direct", "dirt", "disagree", "discover", "disease", "dish", "dismiss", "disorder", "display", "distance", "divert", "divide", "divorce", "dizzy", "doctor", "document", "dog", "doll", "dolphin", "domain", "donate", "donkey", "donor", "door", "dose", "double", "dove", "draft", "dragon", "drama", "drastic", "draw", "dream", "dress", "drift", "drill", "drink", "drip", "drive", "drop", "drum", "dry", "duck", "dumb", "dune", "during", "dust", "dutch", "duty", "dwarf", "dynamic", "eager", "eagle", "early", "earn", "earth", "easily", "east", "easy", "echo", "ecology", "economy", "edge", "edit", "educate", "effort", "egg", "eight", "either", "elbow", "elder", "electric", "elegant", "element", "elephant", "elevator", "elite", "else", "embark", "embody", "embrace", "emerge", "emotion", "employ", "empower", "empty", "enable", "enact", "end", "endless", "endorse", "enemy", "energy", "enforce", "engage", "engine", "enhance", "enjoy", "enlist", "enough", "enrich", "enroll", "ensure", "enter", "entire", "entry", "envelope", "episode", "equal", "equip", "era", "erase", "erode", "erosion", "error", "erupt", "escape", "essay", "essence", "estate", "eternal", "ethics", "evidence", "evil", "evoke", "evolve", "exact", "example", "excess", "exchange", "excite", "exclude", "excuse", "execute", "exercise", "exhaust", "exhibit", "exile", "exist", "exit", "exotic", "expand", "expect", "expire", "explain", "expose", "express", "extend", "extra", "eye", "eyebrow", "fabric", "face", "faculty", "fade", "faint", "faith", "fall", "false", "fame", "family", "famous", "fan", "fancy", "fantasy", "farm", "fashion", "fat", "fatal", "father", "fatigue", "fault", "favorite", "feature", "february", "federal", "fee", "feed", "feel", "female", "fence", "festival", "fetch", "fever", "few", "fiber", "fiction", "field", "figure", "file", "film", "filter", "final", "find", "fine", "finger", "finish", "fire", "firm", "first", "fiscal", "fish", "fit", "fitness", "fix", "flag", "flame", "flash", "flat", "flavor", "flee", "flight", "flip", "float", "flock", "floor", "flower", "fluid", "flush", "fly", "foam", "focus", "fog", "foil", "fold", "follow", "food", "foot", "force", "forest", "forget", "fork", "fortune", "forum", "forward", "fossil", "foster", "found", "fox", "fragile", "frame", "frequent", "fresh", "friend", "fringe", "frog", "front", "frost", "frown", "frozen", "fruit", "fuel", "fun", "funny", "furnace", "fury", "future", "gadget", "gain", "galaxy", "gallery", "game", "gap", "garage", "garbage", "garden", "garlic", "garment", "gas", "gasp", "gate", "gather", "gauge", "gaze", "general", "genius", "genre", "gentle", "genuine", "gesture", "ghost", "giant", "gift", "giggle", "ginger", "giraffe", "girl", "give", "glad", "glance", "glare", "glass", "glide", "glimpse", "globe", "gloom", "glory", "glove", "glow", "glue", "goat", "goddess", "gold", "good", "goose", "gorilla", "gospel", "gossip", "govern", "gown", "grab", "grace", "grain", "grant", "grape", "grass", "gravity", "great", "green", "grid", "grief", "grit", "grocery", "group", "grow", "grunt", "guard", "guess", "guide", "guilt", "guitar", "gun", "gym", "habit", "hair", "half", "hammer", "hamster", "hand", "happy", "harbor", "hard", "harsh", "harvest", "hat", "have", "hawk", "hazard", "head", "health", "heart", "heavy", "hedgehog", "height", "hello", "helmet", "help", "hen", "hero", "hidden", "high", "hill", "hint", "hip", "hire", "history", "hobby", "hockey", "hold", "hole", "holiday", "hollow", "home", "honey", "hood", "hope", "horn", "horror", "horse", "hospital", "host", "hotel", "hour", "hover", "hub", "huge", "human", "humble", "humor", "hundred", "hungry", "hunt", "hurdle", "hurry", "hurt", "husband", "hybrid", "ice", "icon", "idea", "identify", "idle", "ignore", "ill", "illegal", "illness", "image", "imitate", "immense", "immune", "impact", "impose", "improve", "impulse", "inch", "include", "income", "increase", "index", "indicate", "indoor", "industry", "infant", "inflict", "inform", "inhale", "inherit", "initial", "inject", "injury", "inmate", "inner", "innocent", "input", "inquiry", "insane", "insect", "inside", "inspire", "install", "intact", "interest", "into", "invest", "invite", "involve", "iron", "island", "isolate", "issue", "item", "ivory", "jacket", "jaguar", "jar", "jazz", "jealous", "jeans", "jelly", "jewel", "job", "join", "joke", "journey", "joy", "judge", "juice", "jump", "jungle", "junior", "junk", "just", "kangaroo", "keen", "keep", "ketchup", "key", "kick", "kid", "kidney", "kind", "kingdom", "kiss", "kit", "kitchen", "kite", "kitten", "kiwi", "knee", "knife", "knock", "know", "lab", "label", "labor", "ladder", "lady", "lake", "lamp", "language", "laptop", "large", "later", "latin", "laugh", "laundry", "lava", "law", "lawn", "lawsuit", "layer", "lazy", "leader", "leaf", "learn", "leave", "lecture", "left", "leg", "legal", "legend", "leisure", "lemon", "lend", "length", "lens", "leopard", "lesson", "letter", "level", "liar", "liberty", "library", "license", "life", "lift", "light", "like", "limb", "limit", "link", "lion", "liquid", "list", "little", "live", "lizard", "load", "loan", "lobster", "local", "lock", "logic", "lonely", "long", "loop", "lottery", "loud", "lounge", "love", "loyal", "lucky", "luggage", "lumber", "lunar", "lunch", "luxury", "lyrics", "machine", "mad", "magic", "magnet", "maid", "mail", "main", "major", "make", "mammal", "man", "manage", "mandate", "mango", "mansion", "manual", "maple", "marble", "march", "margin", "marine", "market", "marriage", "mask", "mass", "master", "match", "material", "math", "matrix", "matter", "maximum", "maze", "meadow", "mean", "measure", "meat", "mechanic", "medal", "media", "melody", "melt", "member", "memory", "mention", "menu", "mercy", "merge", "merit", "merry", "mesh", "message", "metal", "method", "middle", "midnight", "milk", "million", "mimic", "mind", "minimum", "minor", "minute", "miracle", "mirror", "misery", "miss", "mistake", "mix", "mixed", "mixture", "mobile", "model", "modify", "mom", "moment", "monitor", "monkey", "monster", "month", "moon", "moral", "more", "morning", "mosquito", "mother", "motion", "motor", "mountain", "mouse", "move", "movie", "much", "muffin", "mule", "multiply", "muscle", "museum", "mushroom", "music", "must", "mutual", "myself", "mystery", "myth", "naive", "name", "napkin", "narrow", "nasty", "nation", "nature", "near", "neck", "need", "negative", "neglect", "neither", "nephew", "nerve", "nest", "net", "network", "neutral", "never", "news", "next", "nice", "night", "noble", "noise", "nominee", "noodle", "normal", "north", "nose", "notable", "note", "nothing", "notice", "novel", "now", "nuclear", "number", "nurse", "nut", "oak", "obey", "object", "oblige", "obscure", "observe", "obtain", "obvious", "occur", "ocean", "october", "odor", "off", "offer", "office", "often", "oil", "okay", "old", "olive", "olympic", "omit", "once", "one", "onion", "online", "only", "open", "opera", "opinion", "oppose", "option", "orange", "orbit", "orchard", "order", "ordinary", "organ", "orient", "original", "orphan", "ostrich", "other", "outdoor", "outer", "output", "outside", "oval", "oven", "over", "own", "owner", "oxygen", "oyster", "ozone", "pact", "paddle", "page", "pair", "palace", "palm", "panda", "panel", "panic", "panther", "paper", "parade", "parent", "park", "parrot", "party", "pass", "patch", "path", "patient", "patrol", "pattern", "pause", "pave", "payment", "peace", "peanut", "pear", "peasant", "pelican", "pen", "penalty", "pencil", "people", "pepper", "perfect", "permit", "person", "pet", "phone", "photo", "phrase", "physical", "piano", "picnic", "picture", "piece", "pig", "pigeon", "pill", "pilot", "pink", "pioneer", "pipe", "pistol", "pitch", "pizza", "place", "planet", "plastic", "plate", "play", "please", "pledge", "pluck", "plug", "plunge", "poem", "poet", "point", "polar", "pole", "police", "pond", "pony", "pool", "popular", "portion", "position", "possible", "post", "potato", "pottery", "poverty", "powder", "power", "practice", "praise", "predict", "prefer", "prepare", "present", "pretty", "prevent", "price", "pride", "primary", "print", "priority", "prison", "private", "prize", "problem", "process", "produce", "profit", "program", "project", "promote", "proof", "property", "prosper", "protect", "proud", "provide", "public", "pudding", "pull", "pulp", "pulse", "pumpkin", "punch", "pupil", "puppy", "purchase", "purity", "purpose", "purse", "push", "put", "puzzle", "pyramid", "quality", "quantum", "quarter", "question", "quick", "quit", "quiz", "quote", "rabbit", "raccoon", "race", "rack", "radar", "radio", "rail", "rain", "raise", "rally", "ramp", "ranch", "random", "range", "rapid", "rare", "rate", "rather", "raven", "raw", "razor", "ready", "real", "reason", "rebel", "rebuild", "recall", "receive", "recipe", "record", "recycle", "reduce", "reflect", "reform", "refuse", "region", "regret", "regular", "reject", "relax", "release", "relief", "rely", "remain", "remember", "remind", "remove", "render", "renew", "rent", "reopen", "repair", "repeat", "replace", "report", "require", "rescue", "resemble", "resist", "resource", "response", "result", "retire", "retreat", "return", "reunion", "reveal", "review", "reward", "rhythm", "rib", "ribbon", "rice", "rich", "ride", "ridge", "rifle", "right", "rigid", "ring", "riot", "ripple", "risk", "ritual", "rival", "river", "road", "roast", "robot", "robust", "rocket", "romance", "roof", "rookie", "room", "rose", "rotate", "rough", "round", "route", "royal", "rubber", "rude", "rug", "rule", "run", "runway", "rural", "sad", "saddle", "sadness", "safe", "sail", "salad", "salmon", "salon", "salt", "salute", "same", "sample", "sand", "satisfy", "satoshi", "sauce", "sausage", "save", "say", "scale", "scan", "scare", "scatter", "scene", "scheme", "school", "science", "scissors", "scorpion", "scout", "scrap", "screen", "script", "scrub", "sea", "search", "season", "seat", "second", "secret", "section", "security", "seed", "seek", "segment", "select", "sell", "seminar", "senior", "sense", "sentence", "series", "service", "session", "settle", "setup", "seven", "shadow", "shaft", "shallow", "share", "shed", "shell", "sheriff", "shield", "shift", "shine", "ship", "shiver", "shock", "shoe", "shoot", "shop", "short", "shoulder", "shove", "shrimp", "shrug", "shuffle", "shy", "sibling", "sick", "side", "siege", "sight", "sign", "silent", "silk", "silly", "silver", "similar", "simple", "since", "sing", "siren", "sister", "situate", "six", "size", "skate", "sketch", "ski", "skill", "skin", "skirt", "skull", "slab", "slam", "sleep", "slender", "slice", "slide", "slight", "slim", "slogan", "slot", "slow", "slush", "small", "smart", "smile", "smoke", "smooth", "snack", "snake", "snap", "sniff", "snow", "soap", "soccer", "social", "sock", "soda", "soft", "solar", "soldier", "solid", "solution", "solve", "someone", "song", "soon", "sorry", "sort", "soul", "sound", "soup", "source", "south", "space", "spare", "spatial", "spawn", "speak", "special", "speed", "spell", "spend", "sphere", "spice", "spider", "spike", "spin", "spirit", "split", "spoil", "sponsor", "spoon", "sport", "spot", "spray", "spread", "spring", "spy", "square", "squeeze", "squirrel", "stable", "stadium", "staff", "stage", "stairs", "stamp", "stand", "start", "state", "stay", "steak", "steel", "stem", "step", "stereo", "stick", "still", "sting", "stock", "stomach", "stone", "stool", "story", "stove", "strategy", "street", "strike", "strong", "struggle", "student", "stuff", "stumble", "style", "subject", "submit", "subway", "success", "such", "sudden", "suffer", "sugar", "suggest", "suit", "summer", "sun", "sunny", "sunset", "super", "supply", "supreme", "sure", "surface", "surge", "surprise", "surround", "survey", "suspect", "sustain", "swallow", "swamp", "swap", "swarm", "swear", "sweet", "swift", "swim", "swing", "switch", "sword", "symbol", "symptom", "syrup", "system", "table", "tackle", "tag", "tail", "talent", "talk", "tank", "tape", "target", "task", "taste", "tattoo", "taxi", "teach", "team", "tell", "ten", "tenant", "tennis", "tent", "term", "tests", "text", "thank", "that", "theme", "then", "theory", "there", "they", "thing", "this", "thought", "three", "thrive", "throw", "thumb", "thunder", "ticket", "tide", "tiger", "tilt", "timber", "time", "tiny", "tip", "tired", "tissue", "title", "toast", "tobacco", "today", "toddler", "toe", "together", "toilet", "token", "tomato", "tomorrow", "tone", "tongue", "tonight", "tool", "tooth", "top", "topic", "topple", "torch", "tornado", "tortoise", "toss", "total", "tourist", "toward", "tower", "town", "toy", "track", "trade", "traffic", "tragic", "train", "transfer", "trap", "trash", "travel", "tray", "treat", "tree", "trend", "trial", "tribe", "trick", "trigger", "trim", "trip", "trophy", "trouble", "truck", "true", "truly", "trumpet", "trust", "truth", "try", "tube", "tuition", "tumble", "tuna", "tunnel", "turkey", "turn", "turtle", "twelve", "twenty", "twice", "twin", "twist", "two", "type", "typical", "ugly", "umbrella", "unable", "unaware", "uncle", "uncover", "under", "undo", "unfair", "unfold", "unhappy", "uniform", "unique", "unit", "universe", "unknown", "unlock", "until", "unusual", "unveil", "update", "upgrade", "uphold", "upon", "upper", "upset", "urban", "urge", "usage", "use", "used", "useful", "useless", "usual", "utility", "vacant", "vacuum", "vague", "valid", "valley", "valve", "van", "vanish", "vapor", "various", "vast", "vault", "vehicle", "velvet", "vendor", "venture", "venue", "verb", "verify", "version", "very", "vessel", "veteran", "viable", "vibrant", "vicious", "victory", "video", "view", "village", "vintage", "violin", "virtual", "virus", "visa", "visit", "visual", "vital", "vivid", "vocal", "voice", "void", "volcano", "volume", "vote", "voyage", "wage", "wagon", "wait", "walk", "wall", "walnut", "want", "warfare", "warm", "warrior", "wash", "wasp", "waste", "water", "wave", "way", "wealth", "weapon", "wear", "weasel", "weather", "web", "wedding", "weekend", "weird", "welcome", "west", "wet", "whale", "what", "wheat", "wheel", "when", "where", "whip", "whisper", "wide", "width", "wife", "wild", "will", "win", "window", "wine", "wing", "wink", "winner", "winter", "wire", "wisdom", "wise", "wish", "witness", "wolf", "woman", "wonder", "wood", "wool", "word", "work", "world", "worry", "worth", "wrap", "wreck", "wrestle", "wrist", "write", "wrong", "yard", "year", "yellow", "you", "young", "youth", "zebra", "zero", "zone", "zoo"];
+  var throwInvalidUtf8 = function (position, partial) {
+    if (partial.length > 10) {
+      partial = '...' + partial.substr(-10);
     }
+    var err = new Error('Decoded data is not valid UTF-8.'
+      + ' Maybe try base32.decode.asBytes()?'
+      + ' Partial data after reading ' + position + ' bytes: ' + partial + ' <-');
+    err.position = position;
+    throw err;
+  };
 
-
-    createSeed(mnemonic,passphrase){
-      if(passphrase==null){
-          throw new Error("Passphrase should not be null! Please enter a valid password");
+  var toUtf8String = function (bytes) {
+    var str = '', length = bytes.length, i = 0, followingChars = 0, b, c;
+    while (i < length) {
+      b = bytes[i++];
+      if (b <= 0x7F) {
+        str += String.fromCharCode(b);
+        continue;
+      } else if (b > 0xBF && b <= 0xDF) {
+        c = b & 0x1F;
+        followingChars = 1;
+      } else if (b <= 0xEF) {
+        c = b & 0x0F;
+        followingChars = 2;
+      } else if (b <= 0xF7) {
+        c = b & 0x07;
+        followingChars = 3;
+      } else {
+        throwInvalidUtf8(i, str);
       }
-      let buffer_passphrase=Buffer.from(passphrase)
-      let SALT=Buffer.concat([this.SALT_CHARS,buffer_passphrase],this.SALT_CHARS.length+buffer_passphrase.length);
-      let derivedKey=crypto.pbkdf2Sync(mnemonic, SALT, 2048, 512, ALGORITHM);
-      return derivedKey.toString('hex');
-    }
 
-    create(){
-        let bytes = secureRandom.randomBuffer(this.Strength);
-        let hashbits=crypto.createHash('sha256').update(bytes).digest();
-        let binaryHash = Util.bytesToBinaryAsChars(hashbits).slice(0,this.Strength);
-        let checksum=Util.charSubarray(binaryHash,0,(bytes.length/8)*8/32)
-        let entropyBits = Util.bytesToBinaryAsChars(bytes).slice(0,this.Strength);
-        let concatenatedBits=entropyBits.concat(checksum);
-
-        var mnemonicBuilder=""
-        for (let index = 0; index< concatenatedBits.length/11; ++index) {
-            let startIndex = index * 11;
-            let endIndex = startIndex + 11;
-            let wordIndexAsChars=Array(endIndex-startIndex);
-            Util.arrayCopy(concatenatedBits,startIndex,wordIndexAsChars,0,wordIndexAsChars.length)
-            let wordIndex=Util.binaryCharsToInt(wordIndexAsChars);
-            mnemonicBuilder+=this.WordList[wordIndex]+' ';
+      for (var j = 0; j < followingChars; ++j) {
+        b = bytes[i++];
+        if (b < 0x80 || b > 0xBF) {
+          throwInvalidUtf8(i, str);
         }
-       return mnemonicBuilder.trim().split(' ');
+        c <<= 6;
+        c += b & 0x3F;
+      }
+      if (c >= 0xD800 && c <= 0xDFFF) {
+        throwInvalidUtf8(i, str);
+      }
+      if (c > 0x10FFFF) {
+        throwInvalidUtf8(i, str);
+      }
+
+      if (c <= 0xFFFF) {
+        str += String.fromCharCode(c);
+      } else {
+        c -= 0x10000;
+        str += String.fromCharCode((c >> 10) + 0xD800);
+        str += String.fromCharCode((c & 0x3FF) + 0xDC00);
+      }
     }
-}
-global.Mnemonic = Mnemonic;
-}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"./Util.js":189,"buffer":63,"crypto":71,"secure-random":187}],189:[function(require,module,exports){
+    return str;
+  };
+
+  var decodeAsBytes = function (base32Str) {
+    if (base32Str === '') {
+      return [];
+    } else if (!/^[A-Z2-7=]+$/.test(base32Str)) {
+      throw new Error('Invalid base32 characters');
+    }
+    base32Str = base32Str.replace(/=/g, '');
+    var v1, v2, v3, v4, v5, v6, v7, v8, bytes = [], index = 0, length = base32Str.length;
+
+    // 4 char to 3 bytes
+    for (var i = 0, count = length >> 3 << 3; i < count;) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v6 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v7 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v8 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      bytes[index++] = (v1 << 3 | v2 >>> 2) & 255;
+      bytes[index++] = (v2 << 6 | v3 << 1 | v4 >>> 4) & 255;
+      bytes[index++] = (v4 << 4 | v5 >>> 1) & 255;
+      bytes[index++] = (v5 << 7 | v6 << 2 | v7 >>> 3) & 255;
+      bytes[index++] = (v7 << 5 | v8) & 255;
+    }
+
+    // remain bytes
+    var remain = length - count;
+    if (remain === 2) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      bytes[index++] = (v1 << 3 | v2 >>> 2) & 255;
+    } else if (remain === 4) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      bytes[index++] = (v1 << 3 | v2 >>> 2) & 255;
+      bytes[index++] = (v2 << 6 | v3 << 1 | v4 >>> 4) & 255;
+    } else if (remain === 5) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      bytes[index++] = (v1 << 3 | v2 >>> 2) & 255;
+      bytes[index++] = (v2 << 6 | v3 << 1 | v4 >>> 4) & 255;
+      bytes[index++] = (v4 << 4 | v5 >>> 1) & 255;
+    } else if (remain === 7) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v6 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v7 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      bytes[index++] = (v1 << 3 | v2 >>> 2) & 255;
+      bytes[index++] = (v2 << 6 | v3 << 1 | v4 >>> 4) & 255;
+      bytes[index++] = (v4 << 4 | v5 >>> 1) & 255;
+      bytes[index++] = (v5 << 7 | v6 << 2 | v7 >>> 3) & 255;
+    }
+    return bytes;
+  };
+
+  var encodeAscii = function (str) {
+    var v1, v2, v3, v4, v5, base32Str = '', length = str.length;
+    for (var i = 0, count = parseInt(length / 5) * 5; i < count;) {
+      v1 = str.charCodeAt(i++);
+      v2 = str.charCodeAt(i++);
+      v3 = str.charCodeAt(i++);
+      v4 = str.charCodeAt(i++);
+      v5 = str.charCodeAt(i++);
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+        BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+        BASE32_ENCODE_CHAR[(v4 << 3 | v5 >>> 5) & 31] +
+        BASE32_ENCODE_CHAR[v5 & 31];
+    }
+
+    // remain char
+    var remain = length - count;
+    if (remain === 1) {
+      v1 = str.charCodeAt(i);
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2) & 31] +
+        '======';
+    } else if (remain === 2) {
+      v1 = str.charCodeAt(i++);
+      v2 = str.charCodeAt(i);
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4) & 31] +
+        '====';
+    } else if (remain === 3) {
+      v1 = str.charCodeAt(i++);
+      v2 = str.charCodeAt(i++);
+      v3 = str.charCodeAt(i);
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1) & 31] +
+        '===';
+    } else if (remain === 4) {
+      v1 = str.charCodeAt(i++);
+      v2 = str.charCodeAt(i++);
+      v3 = str.charCodeAt(i++);
+      v4 = str.charCodeAt(i);
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+        BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+        BASE32_ENCODE_CHAR[(v4 << 3) & 31] +
+        '=';
+    }
+    return base32Str;
+  };
+
+  var encodeUtf8 = function (str) {
+    var v1, v2, v3, v4, v5, code, end = false, base32Str = '',
+      index = 0, i, start = 0, bytes = 0, length = str.length;
+      if (str === '') {
+        return base32Str;
+      }
+    do {
+      blocks[0] = blocks[5];
+      blocks[1] = blocks[6];
+      blocks[2] = blocks[7];
+      for (i = start; index < length && i < 5; ++index) {
+        code = str.charCodeAt(index);
+        if (code < 0x80) {
+          blocks[i++] = code;
+        } else if (code < 0x800) {
+          blocks[i++] = 0xc0 | (code >> 6);
+          blocks[i++] = 0x80 | (code & 0x3f);
+        } else if (code < 0xd800 || code >= 0xe000) {
+          blocks[i++] = 0xe0 | (code >> 12);
+          blocks[i++] = 0x80 | ((code >> 6) & 0x3f);
+          blocks[i++] = 0x80 | (code & 0x3f);
+        } else {
+          code = 0x10000 + (((code & 0x3ff) << 10) | (str.charCodeAt(++index) & 0x3ff));
+          blocks[i++] = 0xf0 | (code >> 18);
+          blocks[i++] = 0x80 | ((code >> 12) & 0x3f);
+          blocks[i++] = 0x80 | ((code >> 6) & 0x3f);
+          blocks[i++] = 0x80 | (code & 0x3f);
+        }
+      }
+      bytes += i - start;
+      start = i - 5;
+      if (index === length) {
+        ++index;
+      }
+      if (index > length && i < 6) {
+        end = true;
+      }
+      v1 = blocks[0];
+      if (i > 4) {
+        v2 = blocks[1];
+        v3 = blocks[2];
+        v4 = blocks[3];
+        v5 = blocks[4];
+        base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+          BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+          BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+          BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+          BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+          BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+          BASE32_ENCODE_CHAR[(v4 << 3 | v5 >>> 5) & 31] +
+          BASE32_ENCODE_CHAR[v5 & 31];
+      } else if (i === 1) {
+        base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+          BASE32_ENCODE_CHAR[(v1 << 2) & 31] +
+          '======';
+      } else if (i === 2) {
+        v2 = blocks[1];
+        base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+          BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+          BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+          BASE32_ENCODE_CHAR[(v2 << 4) & 31] +
+          '====';
+      } else if (i === 3) {
+        v2 = blocks[1];
+        v3 = blocks[2];
+        base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+          BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+          BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+          BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+          BASE32_ENCODE_CHAR[(v3 << 1) & 31] +
+          '===';
+      } else {
+        v2 = blocks[1];
+        v3 = blocks[2];
+        v4 = blocks[3];
+        base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+          BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+          BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+          BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+          BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+          BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+          BASE32_ENCODE_CHAR[(v4 << 3) & 31] +
+          '=';
+      }
+    } while (!end);
+    return base32Str;
+  };
+
+  var encodeBytes = function (bytes) {
+    var v1, v2, v3, v4, v5, base32Str = '', length = bytes.length;
+    for (var i = 0, count = parseInt(length / 5) * 5; i < count;) {
+      v1 = bytes[i++];
+      v2 = bytes[i++];
+      v3 = bytes[i++];
+      v4 = bytes[i++];
+      v5 = bytes[i++];
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+        BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+        BASE32_ENCODE_CHAR[(v4 << 3 | v5 >>> 5) & 31] +
+        BASE32_ENCODE_CHAR[v5 & 31];
+    }
+
+    // remain char
+    var remain = length - count;
+    if (remain === 1) {
+      v1 = bytes[i];
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2) & 31] +
+        '======';
+    } else if (remain === 2) {
+      v1 = bytes[i++];
+      v2 = bytes[i];
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4) & 31] +
+        '====';
+    } else if (remain === 3) {
+      v1 = bytes[i++];
+      v2 = bytes[i++];
+      v3 = bytes[i];
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1) & 31] +
+        '===';
+    } else if (remain === 4) {
+      v1 = bytes[i++];
+      v2 = bytes[i++];
+      v3 = bytes[i++];
+      v4 = bytes[i];
+      base32Str += BASE32_ENCODE_CHAR[v1 >>> 3] +
+        BASE32_ENCODE_CHAR[(v1 << 2 | v2 >>> 6) & 31] +
+        BASE32_ENCODE_CHAR[(v2 >>> 1) & 31] +
+        BASE32_ENCODE_CHAR[(v2 << 4 | v3 >>> 4) & 31] +
+        BASE32_ENCODE_CHAR[(v3 << 1 | v4 >>> 7) & 31] +
+        BASE32_ENCODE_CHAR[(v4 >>> 2) & 31] +
+        BASE32_ENCODE_CHAR[(v4 << 3) & 31] +
+        '=';
+    }
+    return base32Str;
+  };
+
+  var encode = function (input, asciiOnly) {
+    var notString = typeof(input) !== 'string';
+    if (notString && input.constructor === ArrayBuffer) {
+      input = new Uint8Array(input);
+    }
+    if (notString) {
+      return encodeBytes(input);
+    } else if (asciiOnly) {
+      return encodeAscii(input);
+    } else {
+      return encodeUtf8(input);
+    }
+  };
+
+  var decode = function (base32Str, asciiOnly) {
+    if (!asciiOnly) {
+      return toUtf8String(decodeAsBytes(base32Str));
+    }
+    if (base32Str === '') {
+      return '';
+    } else if (!/^[A-Z2-7=]+$/.test(base32Str)) {
+      throw new Error('Invalid base32 characters');
+    }
+    var v1, v2, v3, v4, v5, v6, v7, v8, str = '', length = base32Str.indexOf('=');
+    if (length === -1) {
+      length = base32Str.length;
+    }
+
+    // 8 char to 5 bytes
+    for (var i = 0, count = length >> 3 << 3; i < count;) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v6 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v7 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v8 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      str += String.fromCharCode((v1 << 3 | v2 >>> 2) & 255) +
+        String.fromCharCode((v2 << 6 | v3 << 1 | v4 >>> 4) & 255) +
+        String.fromCharCode((v4 << 4 | v5 >>> 1) & 255) +
+        String.fromCharCode((v5 << 7 | v6 << 2 | v7 >>> 3) & 255) +
+        String.fromCharCode((v7 << 5 | v8) & 255);
+    }
+
+    // remain bytes
+    var remain = length - count;
+    if (remain === 2) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      str += String.fromCharCode((v1 << 3 | v2 >>> 2) & 255);
+    } else if (remain === 4) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      str += String.fromCharCode((v1 << 3 | v2 >>> 2) & 255) +
+        String.fromCharCode((v2 << 6 | v3 << 1 | v4 >>> 4) & 255);
+    } else if (remain === 5) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      str += String.fromCharCode((v1 << 3 | v2 >>> 2) & 255) +
+        String.fromCharCode((v2 << 6 | v3 << 1 | v4 >>> 4) & 255) +
+        String.fromCharCode((v4 << 4 | v5 >>> 1) & 255);
+    } else if (remain === 7) {
+      v1 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v2 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v3 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v4 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v5 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v6 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      v7 = BASE32_DECODE_CHAR[base32Str.charAt(i++)];
+      str += String.fromCharCode((v1 << 3 | v2 >>> 2) & 255) +
+        String.fromCharCode((v2 << 6 | v3 << 1 | v4 >>> 4) & 255) +
+        String.fromCharCode((v4 << 4 | v5 >>> 1) & 255) +
+        String.fromCharCode((v5 << 7 | v6 << 2 | v7 >>> 3) & 255);
+    }
+    return str;
+  };
+
+  var exports = {
+    encode: encode,
+    decode: decode
+  };
+  decode.asBytes = decodeAsBytes;
+
+  if (COMMON_JS) {
+    module.exports = exports;
+  } else {
+    root.base32 = exports;
+    if (AMD) {
+      define(function() {
+        return exports;
+      });
+    }
+  }
+})();
+
+}).call(this)}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"_process":149}],204:[function(require,module,exports){
+arguments[4][132][0].apply(exports,arguments)
+},{"dup":132}],205:[function(require,module,exports){
+arguments[4][159][0].apply(exports,arguments)
+},{"buffer":63,"dup":159,"hash-base":187,"inherits":204}],206:[function(require,module,exports){
+arguments[4][160][0].apply(exports,arguments)
+},{"buffer":63,"dup":160}],207:[function(require,module,exports){
+arguments[4][185][0].apply(exports,arguments)
+},{"dup":185,"safe-buffer":206}],208:[function(require,module,exports){
+arguments[4][186][0].apply(exports,arguments)
+},{"dup":186}],209:[function(require,module,exports){
 'use strict';
 module.exports = class Util{
     static arrayCopy(src, srcIndex, dest, destIndex, length) {
@@ -26524,4 +26890,54 @@ module.exports = class Util{
     }
 }
 
-},{}]},{},[188]);
+},{}],210:[function(require,module,exports){
+(function (global,Buffer){(function (){
+'use strict';
+var crypto = require('crypto')
+var RIPEMD160 = require('ripemd160')
+var base32 = require('hi-base32');
+var Util=require("./Util.js")
+class WalletAddress {
+    SEPERATOR
+    ADR_CHECKSUM;
+    ADR_CHECKSUM_BYTES
+    constructor() {
+        this.SEPERATOR = "-";
+        this.ADR_CHECKSUM = "ADR"+this.SEPERATOR
+        this.ADR_CHECKSUM_BYTES = 4;
+    }
+
+     generate_address(version, pubkey) {
+        var version=Buffer.from(version);
+        const hash = crypto.createHash('sha256');
+        var sha256PublicKeyHash=hash.update(pubkey).digest();
+
+        var ripemd160StepOneHash=new RIPEMD160().update(sha256PublicKeyHash).digest();
+        var versionPrefixedRipemd160Hash=Buffer.concat([version,ripemd160StepOneHash],version.length+ripemd160StepOneHash.length);
+        var stepThreeChecksum=this.generateChecksum(versionPrefixedRipemd160Hash);
+        var concatStepThreeAndStepSix=Buffer.concat([versionPrefixedRipemd160Hash,stepThreeChecksum],versionPrefixedRipemd160Hash.length+stepThreeChecksum.length);
+        var HG=concatStepThreeAndStepSix.toString('hex')
+        var encoded = base32.encode(concatStepThreeAndStepSix);
+
+       return this.preety_print(encoded);
+    }
+
+     preety_print(encoded){
+        let res= this.ADR_CHECKSUM.concat(encoded)
+        let parts = encoded.match(/.{1,4}/g);
+        let encoded_seperators = parts.join(this.SEPERATOR);
+        let final= this.ADR_CHECKSUM.concat(encoded_seperators);
+        return final;
+    }
+
+     generateChecksum(versionPrefixedRipemd160Hash){
+        let hash = crypto.createHash('sha256');
+        let sha3StepThreeHash=hash.update(versionPrefixedRipemd160Hash).digest();
+        let arr2=[];
+        Util.arrayCopy(sha3StepThreeHash, 0, arr2, 0, this.ADR_CHECKSUM_BYTES);
+        return Buffer.from(arr2);
+    }
+}
+global.WalletAddress = WalletAddress;
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
+},{"./Util.js":209,"buffer":63,"crypto":71,"hi-base32":203,"ripemd160":205}]},{},[210]);

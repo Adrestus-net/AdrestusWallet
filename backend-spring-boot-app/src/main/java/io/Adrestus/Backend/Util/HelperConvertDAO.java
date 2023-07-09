@@ -1,6 +1,6 @@
 package io.Adrestus.Backend.Util;
 
-import io.Adrestus.Backend.model.RegularTransactionDao;
+import io.Adrestus.Backend.payload.request.RegularTransactionDao;
 import io.Adrestus.Backend.model.TransactionDao;
 import io.Adrestus.Backend.model.TransactionDaoType;
 import io.Adrestus.core.RegularTransaction;

@@ -3,7 +3,7 @@ var secureRandom = require('secure-random')
 var Util=require("./Util.js")
 
 const ALGORITHM='sha512'
-module.exports =class Mnemonic{
+class Mnemonic{
     //SALT_CHARS;
     //WordList;
 
@@ -45,3 +45,4 @@ module.exports =class Mnemonic{
        return mnemonicBuilder.trim().split(' ');
     }
 }
+global.Mnemonic = Mnemonic;

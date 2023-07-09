@@ -1,8 +1,10 @@
-package io.Adrestus.Backend.model;
+package io.Adrestus.Backend.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.Adrestus.Backend.model.TransactionDao;
+import io.Adrestus.Backend.model.TransactionDaoType;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegularTransactionDao extends TransactionDao {

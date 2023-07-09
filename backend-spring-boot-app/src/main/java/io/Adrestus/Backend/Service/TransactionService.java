@@ -1,12 +1,10 @@
 package io.Adrestus.Backend.Service;
 
 import io.Adrestus.Backend.Repository.KVRepository;
-import io.Adrestus.Backend.model.ResponseDao;
+import io.Adrestus.Backend.payload.response.ResponseDao;
 import io.Adrestus.Backend.model.TransactionDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 
 
 @Service

@@ -1,6 +1,6 @@
 package io.Adrestus.Backend.Repository;
 
-import io.Adrestus.Backend.model.ResponseDao;
+import io.Adrestus.Backend.payload.response.ResponseDao;
 import io.Adrestus.Backend.model.TransactionDao;
 
 public interface KVRepository {

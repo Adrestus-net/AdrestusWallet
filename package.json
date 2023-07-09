@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-password-strength-bar": "^0.4.1",
+    "validator": "^13.9.0"
+  }
+}

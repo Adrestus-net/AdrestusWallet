@@ -1,7 +1,8 @@
-package io.Adrestus.Backend.model;
+package io.Adrestus.Backend.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.Adrestus.Backend.model.TransactionDao;
 
 import java.util.List;
 import java.util.Objects;

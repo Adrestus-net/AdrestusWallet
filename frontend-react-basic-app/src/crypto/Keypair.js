@@ -2,7 +2,7 @@ var elliptic = require('elliptic');
 var ec = new elliptic.ec('secp256k1');
 var Point = require("./PubPoint")
 const BN = require('bn.js');
-module.exports = class Keypair {
+class Keypair {
 
 
     ec
@@ -42,3 +42,4 @@ module.exports = class Keypair {
         return new BN(this.Keypair.getPublic().encode('hex').substr(2), 16).toString();
     }
 }
+global.Keypair = Keypair;

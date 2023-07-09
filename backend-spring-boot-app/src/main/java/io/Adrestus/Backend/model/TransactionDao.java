@@ -1,8 +1,8 @@
 package io.Adrestus.Backend.model;
 
 import com.fasterxml.jackson.annotation.*;
+import io.Adrestus.Backend.payload.request.RegularTransactionDao;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
