@@ -1,4 +1,6 @@
 'use strict';
+import Keypair from "./Keypair";
+
 var crypto = require('crypto')
 var RIPEMD160 = require('ripemd160')
 var base32 = require('hi-base32');
@@ -45,3 +47,4 @@ class WalletAddress {
     }
 }
 global.WalletAddress = WalletAddress;
+module.exports = WalletAddress

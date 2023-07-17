@@ -10,6 +10,7 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.HashMap;
@@ -29,10 +30,10 @@ public class NetworkConfiguration implements ApplicationListener<ApplicationEnvi
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress("google.com", 80));
         socket.close();
-        setHost(socket.getLocalAddress().getHostAddress());
+        setHost(InetAddress.getLocalHost().getHostAddress());
         MutablePropertySources propertySources = environment.getPropertySources();
         Map<String, Object> map = new HashMap<>();
-        map.put("server.address", socket.getLocalAddress().getHostAddress());
+        map.put("server.address", this.host);
         propertySources.addFirst(new MapPropertySource("newmap", map));
     }
     public String getHost() {

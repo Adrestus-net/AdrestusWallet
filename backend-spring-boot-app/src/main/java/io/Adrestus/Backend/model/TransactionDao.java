@@ -15,7 +15,6 @@ public abstract class TransactionDao {
     private int zoneFrom;
     private int zoneTo;
     private String timestamp;
-    private int blockNumber;
     private String from;
     private String to;
     private double amount;
@@ -35,7 +34,6 @@ public abstract class TransactionDao {
                           @JsonProperty("zoneFrom") int zoneFrom,
                           @JsonProperty("zoneTo") int zoneTo,
                           @JsonProperty("timestamp") String timestamp,
-                          @JsonProperty("blockNumber") int blockNumber,
                           @JsonProperty("from") String from,
                           @JsonProperty("to") String to,
                           @JsonProperty("amount") double amount,
@@ -52,7 +50,6 @@ public abstract class TransactionDao {
         this.zoneFrom = zoneFrom;
         this.zoneTo = zoneTo;
         this.timestamp = timestamp;
-        this.blockNumber = blockNumber;
         this.from = from;
         this.to = to;
         this.amount = amount;
@@ -104,14 +101,6 @@ public abstract class TransactionDao {
 
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public int getBlockNumber() {
-        return blockNumber;
-    }
-
-    public void setBlockNumber(int blockNumber) {
-        this.blockNumber = blockNumber;
     }
 
     public String getFrom() {
@@ -208,12 +197,12 @@ public abstract class TransactionDao {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TransactionDao that = (TransactionDao) o;
-        return zoneFrom == that.zoneFrom && zoneTo == that.zoneTo && blockNumber == that.blockNumber && Double.compare(that.amount, amount) == 0 && Double.compare(that.amountWithTransactionFee, amountWithTransactionFee) == 0 && nonce == that.nonce && v == that.v && Objects.equals(hash, that.hash) && transactionDaoType == that.transactionDaoType && Objects.equals(timestamp, that.timestamp) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(XAxis, that.XAxis) && Objects.equals(YAxis, that.YAxis) && Objects.equals(r, that.r) && Objects.equals(s, that.s) && Objects.equals(pub, that.pub);
+        return zoneFrom == that.zoneFrom && zoneTo == that.zoneTo && Double.compare(that.amount, amount) == 0 && Double.compare(that.amountWithTransactionFee, amountWithTransactionFee) == 0 && nonce == that.nonce && v == that.v && Objects.equals(hash, that.hash) && transactionDaoType == that.transactionDaoType && Objects.equals(timestamp, that.timestamp) && Objects.equals(from, that.from) && Objects.equals(to, that.to) && Objects.equals(XAxis, that.XAxis) && Objects.equals(YAxis, that.YAxis) && Objects.equals(r, that.r) && Objects.equals(s, that.s) && Objects.equals(pub, that.pub);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hash, transactionDaoType, zoneFrom, zoneTo, timestamp, blockNumber, from, to, amount, amountWithTransactionFee, nonce, XAxis, YAxis, v, r, s, pub);
+        return Objects.hash(hash, transactionDaoType, zoneFrom, zoneTo, timestamp, from, to, amount, amountWithTransactionFee, nonce, XAxis, YAxis, v, r, s, pub);
     }
 
     @Override
@@ -224,7 +213,6 @@ public abstract class TransactionDao {
                 ", zoneFrom=" + zoneFrom +
                 ", zoneTo=" + zoneTo +
                 ", timestamp='" + timestamp + '\'' +
-                ", blockNumber=" + blockNumber +
                 ", from='" + from + '\'' +
                 ", to='" + to + '\'' +
                 ", amount=" + amount +

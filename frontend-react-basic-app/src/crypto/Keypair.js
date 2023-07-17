@@ -1,3 +1,5 @@
+import ECDSASignature from "./ECDSASignature";
+
 var elliptic = require('elliptic');
 var ec = new elliptic.ec('secp256k1');
 var Point = require("./PubPoint")
@@ -43,3 +45,4 @@ class Keypair {
     }
 }
 global.Keypair = Keypair;
+module.exports = Keypair

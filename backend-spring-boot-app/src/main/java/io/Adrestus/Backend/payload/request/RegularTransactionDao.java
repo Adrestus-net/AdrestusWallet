@@ -16,7 +16,6 @@ public class RegularTransactionDao extends TransactionDao {
             @JsonProperty("zoneFrom") int zoneFrom,
             @JsonProperty("zoneTo") int zoneTo,
             @JsonProperty("timestamp") String timestamp,
-            @JsonProperty("blockNumber") int blockNumber,
             @JsonProperty("from") String from,
             @JsonProperty("to") String to,
             @JsonProperty("amount") double amount,
@@ -28,7 +27,7 @@ public class RegularTransactionDao extends TransactionDao {
             @JsonProperty("r") String r,
             @JsonProperty("s") String s,
             @JsonProperty("pub") String pub) {
-        super(hash, transactionDaoType, zoneFrom, zoneTo, timestamp, blockNumber, from, to, amount, amountWithTransactionFee, nonce, XAxis, YAxis, v, r, s, pub);
+        super(hash, transactionDaoType, zoneFrom, zoneTo, timestamp, from, to, amount, amountWithTransactionFee, nonce, XAxis, YAxis, v, r, s, pub);
     }
 
 

@@ -21,12 +21,12 @@ function Register() {
     const [address, setAddress] = useState('');
 
 
-    useEffect(() => {
+   /* useEffect(() => {
         let arr = Array.from(Array(12).keys())
         updateMyArray12(arr)
         updateMyArray24(new Array(0))
         setMnemonic(new window.Mnemonic(128).create())
-    }, []);
+    }, []);*/
 
     const onClick = (e) => {
         e.preventDefault()
@@ -166,7 +166,7 @@ function Register() {
         <div>
             {stages === Stages.Stage1 ?
                 <form formaction="/action_one" onSubmit={onStage1Submit}>
-                    <textarea id="myTextarea" value={mnemonic == null ? '' : mnemonic}>{mnemonic}</textarea>
+                    {mnemonic!=null &&<textarea id="myTextarea" value={mnemonic == null ? '' : mnemonic}>{mnemonic}</textarea>}
                     <button type={"twelve"} value="12" onClick={(event) => onClick(event)}>12 word</button>
                     <button type={"fourtyfour"} value="24" onClick={(event) => onClick(event)}>24 word</button>
                     <label>Enter your email:

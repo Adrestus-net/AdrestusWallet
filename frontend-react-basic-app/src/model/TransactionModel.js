@@ -1,14 +1,13 @@
 import CredentialDB from "../Storage/CredentialsDB";
 
 class TransactionModel{
-    constructor(type,hash,transactionDaoType,zoneFrom,zoneTo,timestamp,blockNumber,from,to,amount,amountWithTransactionFee,nonce,v,r,s,pub,xaxis,yaxis) {
+    constructor(type,hash,transactionDaoType,zoneFrom,zoneTo,timestamp,from,to,amount,amountWithTransactionFee,nonce,v,r,s,pub,xaxis,yaxis) {
         this.Type=type;
         this.Hash=hash;
         this.TransactionDaoType=transactionDaoType;
         this.ZoneFrom=zoneFrom;
         this.ZoneTo=zoneTo;
         this.Timestamp=timestamp;
-        this.BlockNumber=blockNumber;
         this.From=from;
         this.To=to;
         this.Amount=amount;
@@ -59,14 +58,6 @@ class TransactionModel{
 
     set Timestamp(value) {
         this.timestamp = value;
-    }
-
-    get BlockNumber() {
-        return this.blockNumber;
-    }
-
-    set BlockNumber(value) {
-        this.blockNumber = value;
     }
 
     get From() {

@@ -1,6 +1,6 @@
-const ListItems = ({value}) => {
+const ListItems = ({index,value}) => {
     return (
-        <li>{JSON.stringify(value)}</li>
+        <li key={index}>{JSON.stringify(value)}</li>
     )
 }
 

@@ -28,4 +28,4 @@ Note: The TestClass then becomes available everywhere. Which is the same as usin
 
     Additionally you can create a decorator that exposes a class to the global scope. Which is really nice but makes it hard to track where a variable is defined.*/
 
-//merit,oval,sunset,kid,quit,model,flee,diagram,exile,lyrics,table,planet
+//slender,iron,lab,when,naive,bus,exhaust,measure,broken,stable,response,cradle

@@ -1,13 +1,20 @@
 import {useSignIn,useIsAuthenticated} from 'react-auth-kit'
-import React, {useState} from "react"
+import React, {useRef, useState} from "react"
 import Testnet from '../config/Testnet'
 import validator from "validator";
 import Stages from '../util/Stages'
 import Status from '../util/Status'
 import TextFields from "../components/TextFields";
 import apiRequest from "../Services/apiRequest";
-
+import EXPIRATION from "../config/Expiration"
+import {Link,Navigate,useNavigate} from "react-router-dom";
+import Mnemonic from '../bundle/MnemonicBundle.js'
+import Keypair from '../bundle/KeypairBundle.js';
+import WalletAddress from '../bundle/WalletAddressBundle.js';
+import HashFunction from '../bundle/HashFunctionBundle.js'
+import ECDSASignature from '../bundle/ECDSASignatureBundle'
 function Login() {
+    const navigate = useNavigate();
     const isAuthenticated = useIsAuthenticated()
     const signIn = useSignIn()
     const [formData, setFormData] = useState({email: '', password: ''})
@@ -18,6 +25,7 @@ function Login() {
     const [myArray24, updateMyArray24] = useState(new Array(0));
     const [mnemonic, setMnemonic] = useState(null);
     const [address, setAddress] = useState('');
+    const keys = useRef(null);
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -38,14 +46,14 @@ function Login() {
         if (myArray12.length != 0) {
             let mnem = new window.Mnemonic(128)
             let seed = mnem.createSeed(myArray12.join(' '), formData.password)
-            let keys = new window.Keypair(seed);
-            username = wallet.generate_address('0', keys.getPubBigInteger)
+            keys.current = new window.Keypair(seed);
+            username = wallet.generate_address('0', keys.current.getPubBigInteger)
             setAddress(username)
         } else {
             let mnem = new window.Mnemonic(256)
             let seed = mnem.createSeed(myArray24.join(' '), formData.password)
-            let keys = new window.Keypair(seed);
-            username = wallet.generate_address('0', keys.getPubBigInteger)
+            keys.current = new window.Keypair(seed);
+            username = wallet.generate_address('0',  keys.current.getPubBigInteger)
             setAddress(username)
         }
         const fetchItems = async () => {
@@ -71,13 +79,14 @@ function Login() {
                     if (signIn(
                         {
                             token: json_response.token,
-                            expiresIn: 1,
+                            expiresIn: EXPIRATION.EXPIRATION_BEARER,
                             tokenType: "Bearer",
                             authState: formData.email,
                             refreshToken: json_response.token,
                             refreshTokenExpireIn: 1
                         }
                     )) {
+                        localStorage.setItem("bearer",json_response.token)
                         setStatus(Status.Approve)
                         setErrMessage("Login is successful")
                     } else {
@@ -112,9 +121,11 @@ function Login() {
             updateMyArray24(arr)
             setMnemonic(new window.Mnemonic(256).create())
         }
+        setErrMessage('')
     }
     const onChange = (e) => {
         var type = e.target.type;
+        var val = e.target.value;
         if (type == 'email') {
             var email = e.target.value;
             if (validator.isEmail(email)) {
@@ -140,8 +151,9 @@ function Login() {
             {myArray24.length == 24 && formData.email != '' && formData.password != '' && myArray24.map((value, index) =>
                 <TextFields index={index} myArray={myArray24} updateMyArray={updateMyArray24}/>)}
             <button type="submit" formAction="/login">Login</button>
+            <Link to="/Register" className="btn btn-primary">Sign up</Link>
             {status == Status.Reject && <p>{Message}</p>}
-            {status == Status.Approve && <p>{Message}</p>}
+            {status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,myArray12:myArray12,myArray24:myArray24}})};
         </form>
     );
 }

@@ -1,6 +1,7 @@
-import {useAuthHeader, createRefresh} from 'react-auth-kit'
+import {createRefresh} from 'react-auth-kit'
 import Testnet from '../config/Testnet'
 import apiRequest from "./apiRequest";
+import EXPIRATION from "../config/Expiration"
 const refreshApi = createRefresh({
     interval: 1,   // Refreshs the token in every 10 minutes
     refreshApiCallback: async (
@@ -17,12 +18,13 @@ const refreshApi = createRefresh({
                 const response = await result.json();
                 console.log(response)
                 document.cookie="Bearer=" + response.token;
+                localStorage.setItem("bearer",response.token)
                 return {
                     isSuccess: true,
                     newAuthToken: response.token,
-                    newAuthTokenExpireIn: 1,
+                    newAuthTokenExpireIn: EXPIRATION.EXPIRATION_BEARER,
                     newRefreshToken: response.token,
-                    newRefreshTokenExpiresIn: 2,
+                    newRefreshTokenExpiresIn: EXPIRATION.EXPIRATION_REFRESH_BEARER,
                 }
             }
         }

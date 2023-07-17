@@ -59,7 +59,7 @@ public class JwtUtil {
 	private AuthenticationResponse doGenerateToken(Map<String, Object> claims, String subject) {
 		if(isTimer){
 			isTimer=false;
-			Date expiration=new Date(System.currentTimeMillis()+1000);
+			Date expiration=new Date(System.currentTimeMillis()+1500);
 			JwtBuilder builder=Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 					.setExpiration(expiration)
 					.signWith(SignatureAlgorithm.HS512, secret);
@@ -77,7 +77,7 @@ public class JwtUtil {
 	public AuthenticationResponse doGenerateRefreshToken(Map<String, Object> claims, String subject) {
 		if(isTimer){
 			isTimer=false;
-			Date expiration=new Date(System.currentTimeMillis()+1000);
+			Date expiration=new Date(System.currentTimeMillis()+1500);
 			JwtBuilder builder = Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
 					.setExpiration(expiration)
 					.signWith(SignatureAlgorithm.HS512, secret);

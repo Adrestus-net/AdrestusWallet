@@ -1,36 +1,37 @@
 import {AuthProvider, RequireAuth} from 'react-auth-kit'
 import React from 'react';
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import WalletView from "./pages/WalletView";
-import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
-import SignUp2 from "./pages/SignUp2";
 import Register from "./pages/Register";
 import refreshApi from "./Services/refreshApi";
+import Dashboard from "./pages/Dashboard";
+import SignUp2 from "./pages/SignUp2";
+import SignUp from "./pages/SignUp";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
         <BrowserRouter>
             <AuthProvider authType={"cookie"}
-                           authName={"_auth"}
-                           cookieDomain={window.location.hostname}
-                           cookieSecure={false}
-                           refresh={refreshApi}>
+                          authName={"_auth"}
+                          cookieDomain={window.location.hostname}
+                          cookieSecure={false}
+                          refresh={refreshApi}>
                 <Routes>
                     {/*<Route index element={<App/>}/>*/}
-                    <Route exact path="/" component={<Register/>}/>
-                    <Route path="/App" element={<App/>}/>
+                    {/* <Route path="/App" element={<App/>}/>/
                     <Route path="/SignUp" element={<SignUp/>}/>
-                    <Route path="/SignUp2" element={<SignUp2/>}/>
-                    <Route path="/Login" element={<Login/>}/>
-                    <Route path={'/WalletView'} element={
+                    <Route path="/SignUp2" element={<SignUp2/>}/>*/}
+                    <Route path="*" element={<Navigate to="/Login"/>}/>
+                    <Route exact path="/Register" element={<Register/>}/>
+                    <Route exact path="/Login" element={<Login/>}/>
+                    {/*<Route exact path="/Dashboard" element={<Dashboard/>}/>*/}
+                    {<Route exact path={'/Dashboard'} element={
                         <RequireAuth loginPath={'/login'}>
-                            <WalletView/>
+                            <Dashboard/>
                         </RequireAuth>
-                    }/>
+                    }/>}
                     <Route path="/Register" element={<Register/>}/>
                 </Routes>
             </AuthProvider>
