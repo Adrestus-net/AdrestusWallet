@@ -8,6 +8,7 @@ import refreshApi from "./Services/refreshApi";
 import Dashboard from "./pages/Dashboard";
 import SignUp2 from "./pages/SignUp2";
 import SignUp from "./pages/SignUp";
+import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

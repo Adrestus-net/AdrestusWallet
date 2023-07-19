@@ -29,3 +29,16 @@ Note: The TestClass then becomes available everywhere. Which is the same as usin
     Additionally you can create a decorator that exposes a class to the global scope. Which is really nice but makes it hard to track where a variable is defined.*/
 
 //slender,iron,lab,when,naive,bus,exhaust,measure,broken,stable,response,cradle
+
+//"pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
+// "tailwind": "npx tailwindcss -i ./src/index.css -o ./src/css/style.css --watch",
+//npm install -D tailwindcss
+//npx tailwindcss init
+//npm i -D prettier-plugin-tailwindcss
+//npm i -D  tailwindcss-rtl
+//npm i -D prettier
+//optional if not play 1 and 2
+//1 npm install -D tailwindcss postcss autoprefixer concurrently
+//2 npm install -D prettier prettier-plugin-tailwindcss
+//npm run tailwind
+//npm run pretty

@@ -32,13 +32,13 @@ function Dashboard() {
     const sign = useRef(new window.ECDSASignature());
 
     useEffect(() => {
-        if (state.myArray12.length != 0) {
+        if (state.mnemArray.length == 12) {
             let mnem = new window.Mnemonic(128)
-            let seed = mnem.createSeed(state.myArray12.join(' '), state.formData.password)
+            let seed = mnem.createSeed(state.mnemArray.join(' '), state.formData.password)
             keys.current = new window.Keypair(seed);
         } else {
             let mnem = new window.Mnemonic(256)
-            let seed = mnem.createSeed(state.myArray24.join(' '), state.formData.password)
+            let seed = mnem.createSeed(state.mnemArray.join(' '), state.formData.password)
             keys.current = new window.Keypair(seed);
         }
 
