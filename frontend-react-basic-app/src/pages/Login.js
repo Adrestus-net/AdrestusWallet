@@ -172,8 +172,7 @@ function Login() {
     }
     return (
         <div className="mt-3 h-full w-full">
-            <div
-                className="h-[350px] w-full rounded-[20px] bg-gradient-to-br from-brandLinear to-blueSecondary md:h-[390px]"/>
+            <div className="h-[350px] w-full rounded-[20px] bg-gradient-to-br from-brandLinear to-blueSecondary md:h-[390px]"/>
             <div className="w-md:2/3 mx-auto h-full w-5/6 md:px-3  3xl:w-7/12">
                 <div className="-mt-[280px] w-full pb-10 md:-mt-[240px] md:px-[70px]">
                 </div>

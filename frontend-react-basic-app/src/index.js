@@ -9,6 +9,7 @@ import Dashboard from "./pages/Dashboard";
 import SignUp2 from "./pages/SignUp2";
 import SignUp from "./pages/SignUp";
 import "./index.css";
+import ViewTest from "./pages/ViewTest";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -27,6 +28,7 @@ root.render(
                     <Route path="*" element={<Navigate to="/Login"/>}/>
                     <Route exact path="/Register" element={<Register/>}/>
                     <Route exact path="/Login" element={<Login/>}/>
+                    <Route exact path="/View" element={<ViewTest/>}/>
                     {/*<Route exact path="/Dashboard" element={<Dashboard/>}/>*/}
                     {<Route exact path={'/Dashboard'} element={
                         <RequireAuth loginPath={'/login'}>
