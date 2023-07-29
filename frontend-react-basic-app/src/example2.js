@@ -28,8 +28,8 @@ Note: The TestClass then becomes available everywhere. Which is the same as usin
 
     Additionally you can create a decorator that exposes a class to the global scope. Which is really nice but makes it hard to track where a variable is defined.*/
 
-//slender,iron,lab,when,naive,bus,exhaust,measure,broken,stable,response,cradle
-
+//room visa text tuna script session upon grace predict ignore ship resource
+//spread flush modify snap member ticket exit suffer sadness suffer rich super kostas@gmail.com
 //"pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
 // "tailwind": "npx tailwindcss -i ./src/index.css -o ./src/css/style.css --watch",
 //npm install -D tailwindcss

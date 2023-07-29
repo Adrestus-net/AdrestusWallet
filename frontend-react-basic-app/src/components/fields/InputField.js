@@ -1,9 +1,10 @@
 // Custom components
 import React from "react";
+import SolidSubtleAlert from "../SolidSubtleAlert";
+import {AiFillExclamationCircle} from "react-icons/ai";
 
 function InputField(props) {
-    const {label, id, extra, type, placeholder, variant, state, disabled,onchange} = props;
-
+    const {label, id, extra, type, placeholder, variant, state, disabled, onchange, readOnly,result,setResult} = props;
     return (
         <div className={`${extra}`}>
             <label
@@ -18,6 +19,8 @@ function InputField(props) {
                 disabled={disabled}
                 type={type}
                 id={id}
+                name={id}
+                readOnly={readOnly}
                 onChange={(e) => onchange(e)}
                 placeholder={placeholder}
                 className={`mt-2 flex h-12 w-full items-center justify-center rounded-xl border bg-white/0 p-3 text-sm outline-none ${
@@ -30,6 +33,19 @@ function InputField(props) {
                                 : "border-gray-200 dark:!border-white/10 dark:text-white"
                 }`}
             />
+            {result !== '' &&
+                <SolidSubtleAlert
+                    title={`${id} Address Error`}
+                    description={result}
+                    icon={<AiFillExclamationCircle/>}
+                    iconColor="text-white dark:!text-navy-900"
+                    closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
+                    bg="bg-red-500 dark:!bg-red-300"
+                    mb="pt-2 pb-2 my-3"
+                    solid="solid"
+                    setResult={setResult}
+                />
+            }
         </div>
     );
 }

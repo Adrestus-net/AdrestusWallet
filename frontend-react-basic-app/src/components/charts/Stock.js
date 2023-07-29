@@ -14,7 +14,7 @@ const Stock = (props) => {
                         {" "}
                         {sum}{" "}
                     </p>
-                    <p className="font-medium text-gray-600">EUR</p>
+                    <p className="font-medium text-gray-600">USD</p>
                 </div>
             </div>
 
@@ -22,10 +22,10 @@ const Stock = (props) => {
             <div className="flex items-center">
                 <div className="w-[130px]">{chart}</div>
                 <div className={`flex items-center gap-2 font-bold text-green-500`}>
-                    {growth[0] === "+" ? (
-                        <RiArrowUpSFill />
-                    ) : (
+                    {growth[0] === "-" ? (
                         <RiArrowDownSFill className="text-red-500" />
+                    ) : (
+                        <RiArrowUpSFill />
                     )}
                     <p className={growth[0] === "-" ? "text-red-500" : "text-green-500"}>
                         {" "}

@@ -1,7 +1,7 @@
 import { Popover, PopoverTrigger, PopoverContent } from "@chakra-ui/popover";
 import {PopoverBody, PopoverFooter} from "@chakra-ui/react";
 const PopoverHorizon = (props) => {
-    const { extra, trigger, content } = props;
+    const { extra, trigger, content} = props;
     return (
         <Popover placement='right-start' trigger="hover">
             <PopoverTrigger>{trigger}</PopoverTrigger>

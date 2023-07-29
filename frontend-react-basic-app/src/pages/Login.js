@@ -120,7 +120,7 @@ function Login() {
                     )) {
                         localStorage.setItem("bearer", json_response.token)
                         setStatus(Status.Approve)
-                        setErrMessage("Login is successful")
+                        setErrMessage('')
                     } else {
                         setStatus(Status.Reject)
                         setErrMessage("Login is successful but Cookie not set")
@@ -214,6 +214,7 @@ function Login() {
                         type="email"
                         state={email_state}
                         onchange={onChange}
+                        result={''}
                     />
                     <InputField
                         variant="auth"
@@ -224,6 +225,7 @@ function Login() {
                         type="password"
                         state={password_state}
                         onchange={onChange}
+                        result={''}
                     />
                     <div class="grid grid-cols-4 gap-4">
                         {myArray12.length == 0 ? myArray24.map((item, num) => (
@@ -257,7 +259,7 @@ function Login() {
                         </div>
                     </div>
                         <div className="mb-3 mt-4">
-                            {status == Status.Reject &&
+                            {Message !== '' &&
                                 <SolidSubtleAlert
                                     title="Sign In Error"
                                     description={Message}
@@ -267,6 +269,8 @@ function Login() {
                                     bg="bg-red-500 dark:!bg-red-300"
                                     mb="pt-2 pb-2"
                                     solid="solid"
+                                    setResult={setErrMessage}
+                                    setStatus={setStatus}
                                 />
                             }
                         </div>
@@ -285,7 +289,8 @@ function Login() {
                         </a>
                     </div>
                     </form>
-                    {status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,mnemArray:myMnemArray}})};
+                    {/*{status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,mnemArray:myMnemArray}})};*/}
+                     {status == Status.Approve && navigate("/View",{state:{formData:formData,address:address,mnemArray:myMnemArray}})}
                 </Card>
                 }
             </div>

@@ -18,6 +18,9 @@ import {BsFillCheckCircleFill} from "react-icons/bs";
 import Mnemonic from '../bundle/MnemonicBundle.js'
 import Keypair from '../bundle/KeypairBundle.js';
 import WalletAddress from '../bundle/WalletAddressBundle.js';
+import RegisterStage1 from "./RegisterStages/RegisterStage1";
+import RegisterStage2 from "./RegisterStages/RegisterStage2";
+import RegisterStage3 from "./RegisterStages/RegisterStage3";
 function Register() {
     const navigate = useNavigate()
 
@@ -289,265 +292,35 @@ function Register() {
                         />
                     </div>
                     {stages === Stages.Stage1 ?
-                        <Card
-                            extra="max-w-[405px] md:max-w-[510px] h-max mx-2.5 md:mx-auto mt-12 mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
-                            <form onSubmit={onStage1Submit}>
-                                <h3 className="flex flex-row flex-nowrap flex justify-center text-4xl font-bold text-navy-700 dark:text-white">
-                                    Sign Up
-                                </h3>
-                                <p className="flex flex-row flex-nowrap flex justify-center mt-[10px] ml-1 text-base text-gray-600">
-                                    Enter your email and password to sign up!
-                                </p>
-                                <div className="mt-6 mb-4 flex items-center gap-3">
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                    <p className="text-base font-medium text-gray-600"> or </p>
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                </div>
-                                <div className="flex flex-col gap-4 flex-wrap: wrap flex items-stretch">
-                                    <div class="flex flex-row flex-nowrap flex justify-center">
-                                        <input type="checkbox" id="pure-toggle-2" onChange={(event) => onClick(event)}
-                                               hidden/>
-                                        <label className="pure-toggle impossible" htmlFor="pure-toggle-2">
-                                            <span className="fontawesome-ok" type="text" role="textbox">12</span>
-                                            <span className="fontawesome-remove" type="text" role="textbox">24</span>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <TextField
-                                            state=""
-                                            label="Mnemonic Key"
-                                            id="textarea"
-                                            cols="3"
-                                            rows="6"
-                                            value={mnemonic}
-                                        />
-                                    </div>
-                                </div>
-                                {/* user info */}
-                                <InputField
-                                    variant="auth"
-                                    extra="mb-3"
-                                    label="First Name*"
-                                    placeholder="John"
-                                    id="firstname"
-                                    type="text"
-                                    state={name_state}
-                                    onchange={onChange}
-                                />
-
-                                <InputField
-                                    variant="auth"
-                                    extra="mb-3"
-                                    label="Last Name*"
-                                    placeholder="Doe"
-                                    id="lastname"
-                                    type="text"
-                                    state={last_name_state}
-                                    onchange={onChange}
-                                />
-                                {/* Email */}
-                                <div>
-                                    <InputField
-                                        variant="auth"
-                                        extra="mb-3"
-                                        label="Email*"
-                                        placeholder="mail@simmmple.com"
-                                        id="email"
-                                        type="email"
-                                        state={email_state}
-                                        onchange={onChange}
-                                    />
-                                </div>
-
-                                {/* Password */}
-
-                                <InputField
-                                    variant="auth"
-                                    extra="mb-3"
-                                    label="Password*"
-                                    placeholder="Min 8 characters"
-                                    id="password"
-                                    type={"password"}
-                                    state={password_state}
-                                    onchange={onChange}
-                                />
-
-                                <div className="flex flex-col flex flex-nowrap flex justify-start">
-                                    {/* Password */}
-                                    <div>
-                                        <InputField
-                                            variant="auth"
-                                            extra="mb-3"
-                                            label="Repeat Password*"
-                                            placeholder="Min 8 characters"
-                                            id="repeat_password"
-                                            type={"password"}
-                                            state={repeat_password_state}
-                                            onchange={onChange}
-                                        />
-                                    </div>
-                                    <div>
-                                        {status == Status.Reject &&
-                                            <SolidSubtleAlert
-                                                title="SignUP Error"
-                                                description={Message}
-                                                icon={<AiFillExclamationCircle/>}
-                                                iconColor="text-white dark:!text-navy-900"
-                                                closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
-                                                bg="bg-red-500 dark:!bg-red-300"
-                                                mb="pt-2 pb-2"
-                                                solid="solid"
-                                            />
-                                        }
-                                    </div>
-                                </div>
-                                {/* Checkbox */}
-                                <div className="mt-2 flex items-center justify-between px-2">
-                                    <div className="flex">
-                                        <Checkbox id="mycheckbox" onchange={onChange}/>
-                                        <p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">
-                                            By creating an account means you agree to the Terms and
-                                            Conditions, and our Privacy Policy
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    className="mt-4 w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition ease-in-out delay-150 bg-indigo-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200">
-                                    Register Step 1
-                                </button>
-                                <div className="mt-3">
-            <span className="text-sm font-medium text-navy-700 dark:text-gray-500">
-              Already a member?
-            </span>
-                                    <a
-                                        href="/Login"
-                                        className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-500 dark:text-white"
-                                    >
-                                        Sign In
-                                    </a>
-                                </div>
-                            </form>
-                        </Card>
+                         <RegisterStage1
+                             onStage1Submit={onStage1Submit}
+                             onClick={onClick}
+                             mnemonic={mnemonic}
+                             name_state={name_state}
+                             onChange={onChange}
+                             last_name_state={last_name_state}
+                             email_state={email_state}
+                             password_state={password_state}
+                             repeat_password_state={repeat_password_state}
+                             status={status}
+                             Message={Message}/>
                         : stages === Stages.Stage2 ?
-                            <Card
-                                extra="max-w-[405px] md:max-w-[510px] h-max mx-2.5 md:mx-auto mt-12 mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
-                                <h3 className="flex flex-row flex-nowrap flex justify-center text-4xl font-bold text-navy-700 dark:text-white">
-                                    Mnemonic Phase
-                                </h3>
-                                <p className="flex flex-row flex-nowrap flex justify-center mt-[10px] ml-1 text-base text-gray-600">
-                                    Fill in correct form the Mnemonic phase!
-                                </p>
-                                <div className="mt-6 mb-4 flex items-center gap-3">
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                    <p className="text-base font-medium text-gray-600"> or </p>
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                </div>
-                                <div className="flex justify-between gap-4 h-screen">
-                                    <div className="mx-auto w-[1000px] container border bg-gray-100 p-2">
-                                        <div className="grid grid-cols-4 gap-4 pb-40 gap-1 h-[350px]">
-                                            {selected.map((item, id) => (
-                                                <button
-                                                    key={id}
-                                                    onClick={() => handleRemove(item, id)}
-                                                    className="flex justify-center bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-10 border border-gray-400 rounded shadow h-[50px]"
-                                                >
-                                                    {item}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <hr className="py-3"/>
-                                        <div className="grid grid-cols-4 gap-4 pb-40 gap-1 h-[350px]">
-                                            {array.map((item, id) => (
-                                                <button
-                                                    key={id}
-                                                    onClick={() => handleAdd(item, id)}
-                                                    className="flex justify-center bg-white hover:bg-gray-200 text-gray-800 font-semibold py-2 px-10 border border-gray-400 rounded shadow h-[50px]"
-                                                >
-                                                    {item}
-                                                </button>
-                                            ))}
-                                        </div>
-                                        <hr className="py-1"/>
-                                        {status == Status.Reject && stages == Stages.Stage2 &&
-                                            <SolidSubtleAlert
-                                                title="Phase 2 Error"
-                                                description={Message}
-                                                icon={<AiFillExclamationCircle/>}
-                                                iconColor="text-white dark:!text-navy-900"
-                                                closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
-                                                bg="bg-red-500 dark:!bg-red-300"
-                                                mb="pt-2 pb-2"
-                                                solid="solid"
-                                            />
-                                        }
-                                        <div className="mt-30 pt-1">
-                                            <button
-                                                className="mt-4 w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition ease-in-out delay-150 bg-indigo-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
-                                                onClick={onStage2Submit}
-                                            >
-                                                Submit Step 2
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Card>
-                            : <Card extra="max-w-[405px] md:max-w-[510px] h-max mx-2.5 md:mx-auto mt-12 mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
-                                <h3 className="flex flex-row flex-nowrap flex justify-center text-4xl font-bold text-navy-700 dark:text-white">
-                                    Mnemonic Phase
-                                </h3>
-                                <p className="flex flex-row flex-nowrap flex justify-center mt-[10px] ml-1 text-base text-gray-600">
-                                    Fill in correct form the Mnemonic phase!
-                                </p>
-                                <div className="mt-6 mb-4 flex items-center gap-3">
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                    <p className="text-base font-medium text-gray-600"> or </p>
-                                    <div className="h-px w-full bg-gray-200 dark:!bg-navy-700"/>
-                                </div>
-                                <form onSubmit={onStage3Submit}>
-                                    <div className="flex flex-col justify-center text-align: center;">
-                                        <p className="ml-2 text-sm font-medium text-navy-700 dark:text-white text-center">You
-                                            are all set open the extension and sign in to begin your interchain
-                                            journey</p>
-                                    </div>
-                                    <button type="submit"
-                                            className="mt-4 mb-4 w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition ease-in-out delay-150 bg-indigo-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200">Create
-                                        my Account
-                                    </button>
-                                    {status == Status.Reject && stages == Stages.Stage3 &&
-                                        <SolidSubtleAlert
-                                            title="Phase 3 Error"
-                                            description={Message}
-                                            icon={<AiFillExclamationCircle/>}
-                                            iconColor="text-white dark:!text-navy-900"
-                                            closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
-                                            bg="bg-red-500 dark:!bg-red-300"
-                                            mb="pt-2 pb-2"
-                                            solid="solid"
-                                        />
-                                    }
-                                    {status == Status.Approve && stages == Stages.Stage3 &&
-                                        <div className="flex flex-col flex items-stretch gap-4">
-                                            <div>
-                                                <button onClick={() => navigate('/Login')} className="mt-4 mb-4 w-full rounded-xl bg-brand-500 py-3 text-base font-medium text-white transition ease-in-out delay-150 bg-indigo-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200" to='/Login'>Log In</button>
-                                            </div>
-                                            <div>
-                                                <SolidSubtleAlert
-                                                    title="Registration Successful"
-                                                    description="Your registration is succeed you can now Log in."
-                                                    icon={<BsFillCheckCircleFill/>}
-                                                    iconColor="text-white dark:!text-navy-900"
-                                                    bg="bg-green-500 dark:!bg-green-300"
-                                                    mb="mb-6"
-                                                    closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
-                                                    solid="solid"
-                                                />
-                                            </div>
-                                        </div>
-                                    }
-                                </form>
-                            </Card>
+                           <RegisterStage2
+                               selected={selected}
+                               handleRemove={handleRemove}
+                               array={array}
+                               handleAdd={handleAdd}
+                               status={status}
+                               stages={stages}
+                               Message={Message}
+                               onStage2Submit={onStage2Submit}
+                                 />
+                            : <RegisterStage3
+                                onStage3Submit={onStage3Submit}
+                                status={status}
+                                stages={stages}
+                                Message={Message}
+                            />
                     }
                 </div>
             </div>

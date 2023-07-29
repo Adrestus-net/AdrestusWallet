@@ -1,6 +1,6 @@
 import React from "react";
 import { AiOutlineClose } from "react-icons/ai";
-
+import Status from '../util/Status'
 function SolidSubtleAlert(props) {
     const {
         icon,
@@ -12,8 +12,13 @@ function SolidSubtleAlert(props) {
         closeBg,
         solid,
         iconColor,
+        setResult,
+        setStatus
     } = props;
-
+    const onClick = () => {
+        setResult('');
+        setStatus(Status.Reject)
+    }
     return (
         <div
             className={`flex justify-between ${mb} h-[48px] w-full items-center py-[6px] pl-[17px] pr-[6px] ${bg} rounded-lg`}
@@ -30,8 +35,7 @@ function SolidSubtleAlert(props) {
                     <span className="pr-[5px] font-bold"> {title} </span> {description}
                 </h5>
             </div>
-            <div
-                className={`flex rounded-md ${closeBg} h-full w-10 cursor-pointer items-center justify-center text-xl font-bold `}
+            <div  onClick={onClick} className={`flex rounded-md ${closeBg} h-full w-10 cursor-pointer items-center justify-center text-xl font-bold `}
             >
                 <AiOutlineClose />
             </div>
