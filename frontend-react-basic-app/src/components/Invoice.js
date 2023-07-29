@@ -1,7 +1,7 @@
 import Card from "./card";
 import ActionButtons from "./ActionButtons";
 import React, {useContext} from "react";
-import {DashBoardContext} from "../pages/ViewTest";
+import {DashBoardContext} from "../pages/Dashboard";
 import DateUtil from '../util/DateUtil.js'
 const Invoice = (props) => {
     const {transaction,address} = useContext(DashBoardContext)

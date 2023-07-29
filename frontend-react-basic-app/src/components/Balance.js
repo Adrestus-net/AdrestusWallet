@@ -5,7 +5,7 @@ import {GiGraduateCap, GiPayMoney} from "react-icons/gi";
 import CardMenu from "./CardMenu";
 import Card from "./card";
 import Transaction from "./Transaction";
-import {DashBoardContext} from "../pages/ViewTest";
+import {DashBoardContext} from "../pages/Dashboard";
 import {FaMoneyBill1Wave} from "react-icons/fa6";
 import DateUtil from "../util/DateUtil";
 const Balance = (props) => {

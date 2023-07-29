@@ -289,8 +289,7 @@ function Login() {
                         </a>
                     </div>
                     </form>
-                    {/*{status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,mnemArray:myMnemArray}})};*/}
-                     {status == Status.Approve && navigate("/View",{state:{formData:formData,address:address,mnemArray:myMnemArray}})}
+                     {status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,mnemArray:myMnemArray}})}
                 </Card>
                 }
             </div>
