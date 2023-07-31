@@ -15,7 +15,7 @@ and experiences but also security, transparency, and community involvement.
 - [x] View transaction history .
 - [x] Provide the api for signing the transaction
 - [x] Support our project
-- [x] Lock the wallet with the 4/6 digits PIN Code
+- [x] LockDashboard the wallet with the 4/6 digits PIN Code
 - [x] Auto lock the wallet after timeout
 - [x] Set the pin code, pin digits and lock timer on the settings
 - [x] Add/Delete/Edit the contacts

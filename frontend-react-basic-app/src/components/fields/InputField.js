@@ -4,7 +4,7 @@ import SolidSubtleAlert from "../SolidSubtleAlert";
 import {AiFillExclamationCircle} from "react-icons/ai";
 
 function InputField(props) {
-    const {label, id, extra, type, placeholder, variant, state, disabled, onchange, readOnly,result,setResult} = props;
+    const {label, id, extra, type, placeholder, variant, state, disabled, onchange, readOnly,result,setResult,setStatus} = props;
     return (
         <div className={`${extra}`}>
             <label
@@ -44,6 +44,7 @@ function InputField(props) {
                     mb="pt-2 pb-2 my-3"
                     solid="solid"
                     setResult={setResult}
+                    setStatus={setStatus}
                 />
             }
         </div>

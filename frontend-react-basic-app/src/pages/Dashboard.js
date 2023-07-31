@@ -10,16 +10,20 @@ import DashBoardNavBar from "../components/DashBoardNavBar";
 import Stages from "../util/Stages";
 import TransactionSetup from "../components/TransactionSetup";
 import Testnet from "../config/Testnet";
+import Timeout from "../config/Timeout"
 import {useLocation} from "react-router-dom";
 import apiRequest from "../Services/apiRequest";
 import TransactionModel from '../model/TransactionModel'
 import DateUtil from '../util/DateUtil.js'
+import { useIdleTimer } from 'react-idle-timer'
 import Mnemonic from '../bundle/MnemonicBundle.js'
 import Keypair from '../bundle/KeypairBundle.js';
 import WalletAddress from '../bundle/WalletAddressBundle.js';
 import HashFunction from '../bundle/HashFunctionBundle.js'
 import ECDSASignature from '../bundle/ECDSASignatureBundle'
 import axios from "axios";
+import LockDashboard from "../components/LockDashboard";
+import Status from "../util/Status";
 export const DashBoardContext = createContext();
 function Dashboard() {
     const location = useLocation();
@@ -32,6 +36,7 @@ function Dashboard() {
         zoneTo: '',
         fees: '',
     })
+    const [status, setStatus] = useState(Status.Pending);
     const [money, setMoney] = useState('')
     const [address, setAddress] = useState(state.address)
     const [mnemArray, setMnemArray] = useState(state.mnemArray)
@@ -58,6 +63,36 @@ function Dashboard() {
     const timer = useRef();
     const hash = useRef(new window.HashFunction());
     const sign = useRef(new window.ECDSASignature());
+
+    const [remaining, setRemaining] = useState(0)
+
+    const onIdle = () => {
+       setStages(Stages.Stage3)
+    }
+
+    const onActive = () => {
+    }
+
+    const onAction = () => {}
+
+    const { getRemainingTime } = useIdleTimer({
+        onIdle,
+        onActive,
+        onAction,
+        timeout: Timeout.LOCK_ACCOUNT_TIMER,
+        throttle: Timeout.THROTTLE
+    })
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setRemaining(Math.ceil(getRemainingTime() / 1000))
+        }, 500)
+
+        return () => {
+            clearInterval(interval)
+        }
+    })
+
 
     useEffect(() => {
         if (mnemArray.length == 12) {
@@ -117,7 +152,7 @@ function Dashboard() {
                 }
                 fetchItems()
 
-            }, 10000);
+            }, Timeout.TRANSACTIONS_RETRIEVE);
 
         }
         return () => {
@@ -296,6 +331,16 @@ function Dashboard() {
                             handleRegistration={handleRegistration}
                             onchange={onChangeText}
                             onAmountCheck={onAmountCheck}/>
+                    }
+
+                    {stages == Stages.Stage3 &&
+                        <LockDashboard
+                            setStages={setStages}
+                            setMessage={setMessage}
+                            setStatus={setStatus}
+                            message={message}
+                            password={password}
+                        />
                     }
                 </Card>
 
