@@ -281,9 +281,9 @@ function Dashboard() {
                 <div className="-mt-[280px] w-full pb-10 md:-mt-[240px] md:px-[70px]">
                 </div>
 
-                <Card
-                    extra="max-w-[805px] md:max-w-[810px] md:w-[910px] h-max min-w-full mx-2.5 md:mx-auto mt-[150px] mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
+                <Card extra="max-w-[805px] md:max-w-[810px] md:w-[910px] h-max min-w-full mx-2.5 md:mx-auto mt-[150px] mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
                     {/*<div className="flex flex-row flex flex-nowrap justify-end mx-auto p-4 rounded-full border-gray-800 border-2 border-light-blue-500 border-opacity-50">*/}
+                    <DashBoardContext.Provider value={{transaction,address}}>
                     <DashBoardNavBar
                         dropDown={dropDown}
                         setDropdown={setDropdown}
@@ -291,7 +291,6 @@ function Dashboard() {
                         setDarkmode={setDarkmode}
                     />
                     {stages == Stages.Stage1 &&
-                        <DashBoardContext.Provider value={{transaction,address}}>
                         <div className="sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 content-between gap-4">
                             <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
                                 <Balance balance={balance}/>
@@ -313,8 +312,8 @@ function Dashboard() {
                                 <Invoice address={address}/>
                             </div>
                         </div>
-                        </DashBoardContext.Provider>
                     }
+                </DashBoardContext.Provider>
                     {stages == Stages.Stage2 &&
                         <TransactionSetup
                             setStages={setStages}

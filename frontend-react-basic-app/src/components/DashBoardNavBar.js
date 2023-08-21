@@ -4,16 +4,59 @@ import {IoMdNotificationsOutline} from "react-icons/io";
 import {BsArrowBarUp} from "react-icons/bs";
 import {RiMoonFill, RiSunFill} from "react-icons/ri";
 import {CgProfile} from "react-icons/cg";
-import React, {useState} from "react";
+import React, {useContext, useState, useEffect, useRef} from "react";
+import {DashBoardContext} from "../pages/Dashboard";
+import DateUtil from "../util/DateUtil";
 
 const DashBoardNavBar= (props) => {
-    const { dropDown, setDropdown, darkmode, setDarkmode} = props;
+    const {transaction, address} = useContext(DashBoardContext)
+    const {dropDown, setDropdown, darkmode, setDarkmode} = props;
     const [isOpened, setIsOpened] = useState(false);
-
+    const [isNotificationBell, setisNotificationBell] = useState(true);
+    const transaction_arrays = useRef(new Array(3));
     function toggle(event,bool,val) {
         setIsOpened(bool);
         if(val!='')
             setDropdown(val)
+    }
+    useEffect(() => {
+        if(transaction_arrays.current===null) {
+            transaction.from.concat(transaction.to).sort(function (a, b) {
+                return Date.parse(b.timestamp) - Date.parse(a.timestamp);
+            }).slice(0, 3).map((item) =>   transaction_arrays.current.push(item))
+            return;
+        }
+
+
+        var temp_arr=[]
+        transaction.from.concat(transaction.to).sort(function (a, b) {
+            return Date.parse(b.timestamp) - Date.parse(a.timestamp);
+        }).slice(0, 3).map((item) =>   temp_arr.push(item))
+        if(JSON.stringify(transaction_arrays.current)===JSON.stringify(temp_arr)){
+            setisNotificationBell(false)
+        }
+        else {
+            console.log(temp_arr)
+            console.log(transaction_arrays.current)
+            setisNotificationBell(true)
+        }
+    }, [transaction]); // <- add the count variable here
+
+    function getShortenStartAddress(val){
+        const str=String(val)
+        return str.substring(0,23)
+    }
+    function getShortenEndAddress(val){
+        const str=String(val)
+        return str.substring(49,str.length)
+    }
+
+    function NotificationClick() {
+        transaction_arrays.current.splice(0,  transaction_arrays.current.length);
+        transaction.from.concat(transaction.to).sort(function (a, b) {
+            return Date.parse(b.timestamp) - Date.parse(a.timestamp);
+        }).slice(0, 3).map((item) =>   transaction_arrays.current.push(item))
+         setisNotificationBell(false)
     }
     return (
         <div className="grid grid-cols-1 md:grid-cols-12 lg:grid-cols-12 xl:grid-cols-12 gap-4 mx-auto p-10 rounded-full border-gray-800 border-2 border-light-blue-500 border-opacity-50">
@@ -78,7 +121,9 @@ const DashBoardNavBar= (props) => {
                         button={
                             <p className="cursor-pointer">
                                 <IoMdNotificationsOutline className="h-4 w-4 text-gray-600 dark:text-white"/>
+                                {isNotificationBell &&
                                 <span className="absolute top-0 right-0 inline-block w-2 h-2 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"></span>
+                                }
                             </p>
                         }
                         animation="origin-[65%_0%] md:origin-top-right transition-all duration-300 ease-in-out"
@@ -89,11 +134,13 @@ const DashBoardNavBar= (props) => {
                                     <p className="text-base font-bold text-navy-700 dark:text-white">
                                         Notification
                                     </p>
-                                    <p className="text-sm font-bold text-navy-700 dark:text-white">
+                                    <p onClick={NotificationClick} className="text-sm font-bold text-navy-700 dark:text-white">
                                         Mark all read
                                     </p>
                                 </div>
-
+                                {transaction != null && transaction.from.concat(transaction.to).sort(function (a, b) {
+                                    return Date.parse(b.timestamp) - Date.parse(a.timestamp);
+                                }).slice(0, 3).map((item) =>
                                 <button className="flex w-full items-center">
                                     <div
                                         className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
@@ -102,29 +149,33 @@ const DashBoardNavBar= (props) => {
                                     <div
                                         className="ml-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">
                                         <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">
-                                            New Update: Horizon UI Dashboard PRO
+                                            Transaction: {DateUtil.UtcToLocal(item.timestamp.split('T')[0])}
                                         </p>
                                         <p className="font-base text-left text-xs text-gray-900 dark:text-white">
-                                            A new update for your downloaded item is available!
+                                            From {getShortenStartAddress(item.from)}....{getShortenEndAddress(item.from)}
+                                        </p>
+                                        <p className="font-base text-left text-xs text-gray-900 dark:text-white">
+                                            To {getShortenStartAddress(item.to)}....{getShortenEndAddress(item.to)}
                                         </p>
                                     </div>
                                 </button>
+                                )}
 
-                                <button className="flex w-full items-center">
-                                    <div
-                                        className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
-                                        <BsArrowBarUp/>
-                                    </div>
-                                    <div
-                                        className="ml-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">
-                                        <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">
-                                            New Update: Horizon UI Dashboard PRO
-                                        </p>
-                                        <p className="font-base text-left text-xs text-gray-900 dark:text-white">
-                                            A new update for your downloaded item is available!
-                                        </p>
-                                    </div>
-                                </button>
+                                {/*<button className="flex w-full items-center">*/}
+                                {/*    <div*/}
+                                {/*        className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">*/}
+                                {/*        <BsArrowBarUp/>*/}
+                                {/*    </div>*/}
+                                {/*    <div*/}
+                                {/*        className="ml-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">*/}
+                                {/*        <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">*/}
+                                {/*            New Update: Horizon UI Dashboard PRO*/}
+                                {/*        </p>*/}
+                                {/*        <p className="font-base text-left text-xs text-gray-900 dark:text-white">*/}
+                                {/*            A new update for your downloaded item is available!*/}
+                                {/*        </p>*/}
+                                {/*    </div>*/}
+                                {/*</button>*/}
                             </div>
                         }
                         classNames={"py-2 top-4 -left-[230px] md:-left-[440px] w-max"}
