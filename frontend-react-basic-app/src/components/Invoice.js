@@ -30,7 +30,7 @@ const Invoice = (props) => {
                 return Date.parse(b.timestamp) - Date.parse(a.timestamp);
             }).map((item) =>
                 <ActionButtons
-                    mb="mb-[42px] -mx-1"
+                    mb="hover:bg-brand-100 group-hover:text-white mb-[42px] -mx-1"
                     name="SIM76-#024214"
                     date={DateUtil.UtcToLocal(item.timestamp.split('T')[0])}
                     sum={"$"+item.amount}
@@ -38,6 +38,7 @@ const Invoice = (props) => {
                     address={address}
                     from={item.from}
                     to={item.to}
+                    item={item}
                 />
             )}
             {/*<ActionButtons*/}

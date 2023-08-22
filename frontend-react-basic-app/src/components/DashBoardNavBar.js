@@ -20,6 +20,9 @@ const DashBoardNavBar= (props) => {
             setDropdown(val)
     }
     useEffect(() => {
+        if(transaction==null)
+            return;
+
         if(transaction_arrays.current===null) {
             transaction.from.concat(transaction.to).sort(function (a, b) {
                 return Date.parse(b.timestamp) - Date.parse(a.timestamp);
