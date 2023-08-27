@@ -1,9 +1,9 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import Card from "./card";
 import Transaction from "./Transaction";
 import {BsFillSendCheckFill} from "react-icons/bs";
 import {RiUserReceived2Line} from "react-icons/ri";
-import {MdOutlineSubscriptions} from "react-icons/md";
+import {MdOutlineSubscriptions, MdUnfoldMore} from "react-icons/md";
 import {DashBoardContext} from "../pages/Dashboard";
 import {FaMoneyBill1, FaMoneyBill1Wave} from "react-icons/fa6";
 import {GiPayMoney, GiReceiveMoney} from "react-icons/gi";
@@ -11,7 +11,30 @@ import DateUtil from '../util/DateUtil.js'
 function TransactionView(props) {
     const {transaction, address} = useContext(DashBoardContext)
     const [num, setNum] = useState(0);
+    const [CurrentItems,setCurrentItems]=useState(null);
 
+    const counter = useRef(5);
+    const stepper = useRef(0);
+    const divider = useRef(5);
+    const SumLength = useRef(0);
+
+    useEffect(() => {
+        if(transaction==null)
+            return
+
+        if(transaction.from.length === 0 && transaction.to.length === 0)
+            return;
+
+        SumLength.current=transaction.from.length+transaction.to.length;
+        if( SumLength<divider.current){
+            setCurrentItems(transaction.from.concat(transaction.to))
+        }
+        else{
+            stepper.current=SumLength/5;
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, counter.current))
+        }
+
+    },[transaction])
     function randomNumberInRange(min, max) {
         // 👇️ get number between min (inclusive) and max (inclusive)
         const rand = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -34,11 +57,28 @@ function TransactionView(props) {
         }
     }
 
+    const onViewMore = (e) => {
+        if(stepper.current===1){
+            setCurrentItems(transaction.from.concat(transaction.to).slice(counter.current, SumLength.current))
+            return
+        }
+        var local_stepper=counter.current/divider.current;
+        if(local_stepper===stepper.current){
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, SumLength.current))
+        }
+        else {
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, counter.current + 5))
+            counter.current=counter.current+5
+        }
+    }
     return (
         // <div className={`flex justify-between ${mb} mt-2 items-center px-1`}>
         <Card
+            // extra={
+            //     "w-full h-4/5 overflow-y auto hover:overflow-y-scroll  py-4 px-[33px] mx-1"
+            // }
             extra={
-                "w-full h-4/5 overflow-y auto hover:overflow-y-scroll  py-4 px-[33px] mx-1"
+                "w-full h-4/5 py-4 px-[33px] mx-1"
             }
         >
             <h5 className="mt-[15px] ml-2 text-lg font-bold text-navy-700 dark:text-white">
@@ -56,7 +96,7 @@ function TransactionView(props) {
                         <p className="text-lg font-medium text-gray-800">Empty transactions</p>
                     </div>
                 }
-                {transaction != null && transaction.from.concat(transaction.to).sort(function (a, b) {
+                {CurrentItems != null && CurrentItems.sort(function (a, b) {
                     return Date.parse(b.timestamp) - Date.parse(a.timestamp);
                 }).map((item) =>
                     item.from === address ?
@@ -77,6 +117,16 @@ function TransactionView(props) {
                             status='accepted'
                         />
                 )}
+                {CurrentItems != null &&
+                    <div className="flex flex-col items-center justify-center">
+                        <button onClick={event => onViewMore(event)} className="flex items-center justify-center rounded-full bg-white p-3 text-2xl text-yellow-500 shadow-2xl transition duration-200 hover:cursor-pointer hover:!bg-gray-50 active:!bg-gray-100 dark:!bg-navy-700 dark:text-white dark:hover:!bg-white/20 dark:active:!bg-white/10">
+                            <MdUnfoldMore />
+                        </button>
+                        <h5 className="mt-1 text-sm font-medium text-navy-700 dark:text-white">
+                            View More
+                        </h5>
+                    </div>
+                }
                 {/*<Transaction*/}
                 {/*    title="Public Transport"*/}
                 {/*    date="22/07/2022"*/}

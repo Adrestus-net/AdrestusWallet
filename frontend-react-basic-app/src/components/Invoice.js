@@ -1,10 +1,51 @@
 import Card from "./card";
 import ActionButtons from "./ActionButtons";
-import React, {useContext} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {DashBoardContext} from "../pages/Dashboard";
 import DateUtil from '../util/DateUtil.js'
+import {MdUnfoldMore} from "react-icons/md";
 const Invoice = (props) => {
     const {transaction,address} = useContext(DashBoardContext)
+    const [CurrentItems,setCurrentItems]=useState(null);
+
+    const counter = useRef(5);
+    const stepper = useRef(0);
+    const divider = useRef(5);
+    const SumLength = useRef(0);
+
+    useEffect(() => {
+        if(transaction==null)
+            return
+
+        if(transaction.from.length === 0 && transaction.to.length === 0)
+            return;
+
+        SumLength.current=transaction.from.length+transaction.to.length;
+        if( SumLength<divider.current){
+            setCurrentItems(transaction.from.concat(transaction.to))
+        }
+        else{
+            stepper.current=SumLength/5;
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, counter.current))
+        }
+
+    },[transaction])
+
+    const onViewMore = (e) => {
+        if(stepper.current===1){
+            setCurrentItems(transaction.from.concat(transaction.to).slice(counter.current, SumLength.current))
+            return
+        }
+        var local_stepper=counter.current/divider.current;
+        if(local_stepper===stepper.current){
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, SumLength.current))
+        }
+        else {
+            setCurrentItems(transaction.from.concat(transaction.to).slice(0, counter.current + 5))
+            counter.current=counter.current+5
+        }
+    }
+
     return (
         <Card extra={"px-9 w-full h-full pt-[12px] pb-2"}>
             {/* Header */}
@@ -26,7 +67,7 @@ const Invoice = (props) => {
                     <p className="text-lg font-medium text-gray-800">Empty transactions</p>
                 </div>
             }
-            {transaction != null && transaction.from.concat(transaction.to).sort(function (a, b) {
+            {CurrentItems != null && CurrentItems.sort(function (a, b) {
                 return Date.parse(b.timestamp) - Date.parse(a.timestamp);
             }).map((item) =>
                 <ActionButtons
@@ -41,6 +82,16 @@ const Invoice = (props) => {
                     item={item}
                 />
             )}
+            {CurrentItems != null &&
+                <div className="flex flex-col items-center justify-center">
+                    <button onClick={event => onViewMore(event)} className="flex items-center justify-center rounded-full bg-white p-3 text-2xl text-yellow-500 shadow-2xl transition duration-200 hover:cursor-pointer hover:!bg-gray-50 active:!bg-gray-100 dark:!bg-navy-700 dark:text-white dark:hover:!bg-white/20 dark:active:!bg-white/10">
+                        <MdUnfoldMore />
+                    </button>
+                    <h5 className="mt-1 text-sm font-medium text-navy-700 dark:text-white">
+                        View More
+                    </h5>
+                </div>
+            }
             {/*<ActionButtons*/}
             {/*    mb="mb-[42px] -mx-1"*/}
             {/*    name="SIM76-#024214"*/}

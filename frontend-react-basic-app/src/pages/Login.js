@@ -18,7 +18,7 @@ import TextField from "../components/fields/TextField";
 import InputField from "../components/fields/InputField";
 import SolidSubtleAlert from "../components/SolidSubtleAlert";
 import {AiFillExclamationCircle} from "react-icons/ai";
-
+import '../css/loader.css'
 
 function Login() {
     const navigate = useNavigate();
@@ -33,6 +33,7 @@ function Login() {
     const [myMnemArray, setMyMnemArray] = useState([]);
     const [mnemonic, setMnemonic] = useState(null);
     const [address, setAddress] = useState('');
+    const [isloadingBar, setisloadingBar] = useState(false);
     const keys = useRef(null);
 
 
@@ -48,6 +49,7 @@ function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault()
+        setisloadingBar(true)
         if (formData.email == '' || formData.password == '') {
             setStatus(Status.Reject)
             setErrMessage("Email or password must not be empty please fill in the data")
@@ -129,10 +131,12 @@ function Login() {
                     setStatus(Status.Reject)
                     setErrMessage("Login is successful but token authentication Failed" + err)
                 }
+                setisloadingBar(false)
                 return
             } else {
                 setStatus(Status.Reject)
                 setErrMessage("Login is failed with code " + result.status + " and with message " + result.statusText)
+                setisloadingBar(false)
             }
         }
         fetchItems();
@@ -280,13 +284,18 @@ function Login() {
                         Sign In
                     </button>
                     <div className="flex flex row justify-evenly">
+                        <div>
                             <span className="text-sm font-medium text-navy-700 dark:text-gray-500 text-center">
                               Not registered yet?
                             </span>
-                        <a href="/Register"
-                           className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-500 dark:text-white">
-                            Create an Account
-                        </a>
+                        </div>
+                        {isloadingBar && <div className="custom-loader"></div>}
+                        <div>
+                            <a href="/Register"
+                               className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-500 dark:text-white">
+                                Create an Account
+                            </a>
+                        </div>
                     </div>
                     </form>
                      {status == Status.Approve && navigate("/Dashboard",{state:{formData:formData,address:address,mnemArray:myMnemArray}})}

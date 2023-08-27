@@ -45,7 +45,7 @@ const Balance = (props) => {
             <p className="mt-[19px] text-sm font-medium text-gray-600">Recent</p>
 
             {/* Bill section */}
-            <div className="flex flex-col flex-wrap mt-[1px] gap-4">
+            <div className="relative flex flex-col flex-wrap mt-[1px] gap-4">
                 {transaction == null &&
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                         <p className="text-lg font-medium text-gray-800">Empty transactions</p>
