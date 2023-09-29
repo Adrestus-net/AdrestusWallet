@@ -80,9 +80,15 @@ and experiences but also security, transparency, and community involvement.
   cd frontend-react-basic-app/
   sudo docker compose up
   ```
-- Open the project with IntelliJ and make sure you run the following commands
-  `clean`, `Install`, `assembly:single`
-
+- Make sure maven is installed
+   ```
+    sudo apt install maven
+  ```  
+- Open a terminal and type the following commands
+   ```
+    cd backend-spring-boot-app
+    mvn clean install
+  ```
 - Navigate to the Backend path and run the jar backend
   ```
   cd backend-spring-boot-app\target
