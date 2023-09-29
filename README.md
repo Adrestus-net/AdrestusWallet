@@ -69,7 +69,7 @@ and experiences but also security, transparency, and community involvement.
   ```
   http://localhost:3000/Register?
   ```
-- Uncompressed build can be found in `/dist` folder, compressed build is `onewallet.zip`.
+## Optional not necessary need
 - Go to Chrome Extensions page and activate the Developer Mode.
 - Click `Load Unpacked` button and point it to `/dist` folder.
 
