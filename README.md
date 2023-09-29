@@ -36,21 +36,58 @@ and experiences but also security, transparency, and community involvement.
 - Go to Chrome Extensions page and activate the Developer Mode.
 - Click `Load Unpacked` button and point it to `/dist` folder, the extension will be autoreloading as you change the codes.
 
-## Build Extension
+## Build Frontend Extension
 
 - Install [node.js](https://nodejs.org/) and npm.
+- Navigate to the frontend path
+  ```
+  cd frontend-react-basic-app/
+  ```
+- Delete the following if folder  exists
+  ```
+  rm -rf node_modules/
+  ```
 - Install dependencies :
   ```
-  npm install
+  sudo npm install
   ```
-- Build the project :
+- Navigate to the following line of code at `config/Testnet.js` on your local repo [ChangeIP](https://github.com/Adrestus-net/AdrestusWallet/blob/master/frontend-react-basic-app/src/config/Testnet.js) and copy-paste your local ip.
   ```
-  npm run build
+  const Testnet = {
+    LOGIN_URL:"http://ChangeIP:8080/authenticate",
+    REGISTER_URL:"http://ChangeIP:8080/register",
+    REFRESH_URL:"http://ChangeIP:8080/refreshtoken",
+    TRANSACTION_URL:"http://ChangeIP:8080/api/v1/transaction/"
+  }
+  module.exports = Testnet;
+  ```
+- Run the project :
+  ```
+  npm start
+  ```
+- Navigate to the following link and check if working: **use localhost and NOT local ip like the above**
+  ```
+  http://localhost:3000/Register?
   ```
 - Uncompressed build can be found in `/dist` folder, compressed build is `onewallet.zip`.
 - Go to Chrome Extensions page and activate the Developer Mode.
 - Click `Load Unpacked` button and point it to `/dist` folder.
 
+---
+## Build BackEnd Extension
+- Make sure you start the mysql database with docker there is exist a docker compose.yml file
+  ```
+  cd frontend-react-basic-app/
+  sudo docker compose up
+  ```
+- Open the project with IntelliJ and make sure you run the following commands
+  `clean`, `Install`, `assembly:single`
+
+- Navigate to the Backend path and run the jar backend
+  ```
+  cd backend-spring-boot-app\target
+  java -jar original-backend-spring-boot-app-1.0-SNAPSHOT.jar
+  ```
 ---
 
 ## Contributing
