@@ -148,7 +148,6 @@ bin/
 .DS_Store
 .attach_pid*
 logback.xml
-*.effective.properties
 node_modules
 package-lock.json
 *.class
@@ -161,7 +160,6 @@ tmp/
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear
@@ -181,7 +179,6 @@ bin/
 .DS_Store
 .attach_pid*
 logback.xml
-*.effective.properties
 node_modules
 package-lock.json
 *.class
