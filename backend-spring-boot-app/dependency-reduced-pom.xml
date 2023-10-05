@@ -48,6 +48,9 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <includeSystemScope>true</includeSystemScope>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>
@@ -101,7 +104,7 @@
               <goal>install-file</goal>
             </goals>
             <configuration>
-              <file>${project.basedir}/src/main/resources/original-adrestus-distributed-ledger-1.0-SNAPSHOT.jar</file>
+              <file>${project.basedir}/src/main/resources/adrestus-distributed-ledger-1.0-SNAPSHOT-jar-with-dependencies.jar</file>
               <groupId>io.Adrestus.v1</groupId>
               <artifactId>adrestus-distributed-ledger</artifactId>
               <version>${adrestus.version}</version>
@@ -143,7 +146,7 @@
               <goal>install-file</goal>
             </goals>
             <configuration>
-              <file>${project.basedir}/src/main/resources/adrestus-core-1.0-SNAPSHOT-jar-with-dependencies.jar</file>
+              <file>${project.basedir}/src/main/resources/adrestus-core-1.1-SNAPSHOT-jar-with-dependencies.jar</file>
               <groupId>io.Adrestus.v1</groupId>
               <artifactId>adrestus-core</artifactId>
               <version>${adrestus.version}</version>
@@ -308,43 +311,43 @@
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-api</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-core</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-crypto</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-distributed-ledger</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-util</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-config</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.Adrestus.v1</groupId>
       <artifactId>adrestus-trie</artifactId>
-      <version>2.0-SNAPSHOT</version>
+      <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
@@ -357,10 +360,11 @@
     <appdirs.version>1.2.1</appdirs.version>
     <jupiter.version>5.3.0</jupiter.version>
     <java.version>11</java.version>
-    <adrestus.version>2.0-SNAPSHOT</adrestus.version>
+    <adrestus.version>1.0-SNAPSHOT</adrestus.version>
     <junittest.version>4.13.2</junittest.version>
     <jaxb-api.version>2.3.1</jaxb-api.version>
     <lombok.version>1.18.30</lombok.version>
+    <adrestus.core.version>1.1-SNAPSHOT</adrestus.core.version>
     <mysql.version>8.0.33</mysql.version>
   </properties>
 </project>

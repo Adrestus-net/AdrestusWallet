@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Properties;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
 public class App {
     public static void main(String[] args) throws IOException {
         /*Socket socket = new Socket();

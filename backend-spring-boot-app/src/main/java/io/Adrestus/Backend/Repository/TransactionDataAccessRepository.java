@@ -31,15 +31,12 @@ public class TransactionDataAccessRepository implements KVRepository {
 
     @Override
     public String addTransaction(Transaction transaction) {
-        /*MessageListener messageListener = new MessageListener();
+        MessageListener messageListener = new MessageListener();
         Strategy transactionStrategy = new Strategy(new TransactionStrategy(transaction, messageListener));
         transactionStrategy.SendTransactionSync();
         if (messageListener.getConsume_list().stream().anyMatch(val -> val.equals(APIConfiguration.MSG_FAILED)))
             return APIConfiguration.MSG_FAILED;
-        return APIConfiguration.MSG_SUCCESS;*/
-        database.save(transaction.getFrom(), transaction);
-        database.save(transaction.getTo(), transaction);
-        return "1";
+        return APIConfiguration.MSG_SUCCESS;
     }
 
     @Override
