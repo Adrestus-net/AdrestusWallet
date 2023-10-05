@@ -1,7 +1,7 @@
 import keypair from "../crypto/Keypair"
 import mnemonic from "../crypto/Mnemonic"
 import ECDSASignature from "../crypto/ECDSASignature"
-
+import UtilBase64 from "../crypto/UtilBase64"
 
 //copyt this values to java function verifySecp256ECDSASignFromeNodJStest and EckeyPairTest.class
 test('SignatureTest', () => {
@@ -28,6 +28,11 @@ test('SignatureTest', () => {
 
     var res = sig.verify(message, signature);
     expect(res).toBe(true);
+
+    let enc=new UtilBase64()
+    expect('QrjQ9wiWv/wkFXTZN20gdKU/cmjH1Dv1o8snhZH5f84=').toBe(enc.convertToBase64(signature.r.toString()))
+    expect('HwSVpnel8+Wg/o8u9Q99fQmSvmeLNDFEG/zDhQ+mRNo=').toBe(enc.convertToBase64(signature.s.toString()))
+
 });
 
 test('SignatureTestWithNohash', () => {

@@ -2,7 +2,7 @@ package io.Adrestus.Backend.Controller;
 
 import io.Adrestus.Backend.Service.TransactionService;
 import io.Adrestus.Backend.payload.response.ResponseDao;
-import io.Adrestus.Backend.model.TransactionDao;
+import io.Adrestus.core.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +21,8 @@ public class TransactionController {
 
 
     @PostMapping
-    public @ResponseBody int addTransaction(@RequestBody TransactionDao transactionDao) {
-        this.transactionService.addTransaction(transactionDao);
-        return 1;
+    public @ResponseBody String addTransaction(@RequestBody Transaction transaction) {
+        return this.transactionService.addTransaction(transaction);
     }
 
     @GetMapping(path = {"{from}"})
@@ -33,7 +32,7 @@ public class TransactionController {
 
 
     @PutMapping(path = {"{from}"})
-    public @ResponseBody int updateTransactionByAddress(@RequestBody @PathVariable("from") String hash, @RequestBody TransactionDao transaction) {
+    public @ResponseBody int updateTransactionByAddress(@RequestBody @PathVariable("from") String hash, @RequestBody Transaction transaction) {
         return this.transactionService.updateTransactionByAddress(hash, transaction);
     }
 

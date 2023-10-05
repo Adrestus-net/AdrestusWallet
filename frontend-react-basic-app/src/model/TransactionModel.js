@@ -1,24 +1,27 @@
-import CredentialDB from "../Storage/CredentialsDB";
-
 class TransactionModel{
-    constructor(type,hash,transactionDaoType,zoneFrom,zoneTo,timestamp,from,to,amount,amountWithTransactionFee,nonce,v,r,s,pub,xaxis,yaxis) {
+    constructor(Transactiontype,type,status,timestamp,hash,nonce,blockNumber,from,to,zoneFrom,zoneTo,amount,amountWithTransactionFee,xaxis,yaxis,v,r,s,pub) {
+        this.Transactiontype=Transactiontype;
         this.Type=type;
-        this.Hash=hash;
-        this.TransactionDaoType=transactionDaoType;
-        this.ZoneFrom=zoneFrom;
-        this.ZoneTo=zoneTo;
+        this.Status=status
         this.Timestamp=timestamp;
+        this.Hash=hash;
+        this.Nonce=nonce;
+        this.BlockNumber=blockNumber;
         this.From=from;
         this.To=to;
+        this.ZoneFrom=zoneFrom;
+        this.ZoneTo=zoneTo;
         this.Amount=amount;
         this.AmountWithTransactionFee = amountWithTransactionFee;
-        this.Nonce=nonce;
-        this.V=v;
-        this.R=r;
-        this.S=s;
-        this.Pub=pub;
         this.Xaxis=xaxis;
         this.Yaxis=yaxis;
+        this.Signature={
+            "v":v,
+            "r":r,
+            "s":s,
+            "pub":pub
+        }
+
     }
     get Hash() {
         return this.hash;
@@ -28,12 +31,26 @@ class TransactionModel{
         this.hash = value;
     }
 
-    get TransactionDaoType() {
-        return this.transactionDaoType;
+    get Type() {
+        return this.type;
     }
 
-    set TransactionDaoType(value) {
-        this.transactionDaoType = value;
+    set Type(value) {
+        this.type = value;
+    }
+
+    get BlockNumber() {
+        return this.blockNumber;
+    }
+    set BlockNumber(value) {
+        this.blockNumber = value;
+    }
+    get Status() {
+        return this.status;
+    }
+
+    set  Status(value) {
+        this.status = value;
     }
 
     get ZoneFrom() {
@@ -116,45 +133,21 @@ class TransactionModel{
         this.yaxis = value;
     }
 
-    get V() {
-        return this.v;
+
+    get Signature(){
+        return this.Signature;
     }
 
-    set V(value) {
-        this.v = value;
+    set Signature(value) {
+        this.signature = value;
     }
 
-    get R() {
-        return this.r;
+    get Transactiontype() {
+        return this.transactiontype;
     }
 
-    set R(value) {
-        this.r = value;
-    }
-
-    get S() {
-        return this.s;
-    }
-
-    set S(value) {
-        this.s = value;
-    }
-
-    get Pub() {
-        return this.pub;
-    }
-
-    set Pub(value) {
-        this.pub = value;
-    }
-
-
-    get Type() {
-        return this.type;
-    }
-
-    set Type(value) {
-        this.type = value;
+    set Transactiontype(value) {
+        this.transactiontype = value;
     }
 }
 export default TransactionModel;

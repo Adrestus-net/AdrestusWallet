@@ -1,9 +1,11 @@
 package io.Adrestus.Backend.Repository;
 
 import com.google.common.reflect.TypeToken;
-import io.Adrestus.Backend.Util.HelperConvertDAO;
 import io.Adrestus.Backend.payload.response.ResponseDao;
-import io.Adrestus.Backend.model.TransactionDao;
+import io.Adrestus.api.MessageListener;
+import io.Adrestus.api.Strategy;
+import io.Adrestus.api.TransactionStrategy;
+import io.Adrestus.config.APIConfiguration;
 import io.Adrestus.core.Transaction;
 import io.distributedLedger.DatabaseFactory;
 import io.distributedLedger.DatabaseType;
@@ -19,7 +21,7 @@ import java.util.Optional;
 @Repository("transactionDao")
 public class TransactionDataAccessRepository implements KVRepository {
 
-    private static List<TransactionDao> memorydb = new ArrayList<>();
+    private static List<Transaction> memorydb = new ArrayList<>();
     private IDatabase<String, LevelDBTransactionWrapper<Transaction>> database;
 
     public TransactionDataAccessRepository() {
@@ -28,18 +30,22 @@ public class TransactionDataAccessRepository implements KVRepository {
     }
 
     @Override
-    public int addTransaction(TransactionDao transaction) {
-        Transaction toSave = HelperConvertDAO.convertDaoToTransaction(transaction);
-        database.save(toSave.getFrom(), toSave);
-        database.save(toSave.getTo(), toSave);
-        return 1;
+    public String addTransaction(Transaction transaction) {
+        /*MessageListener messageListener = new MessageListener();
+        Strategy transactionStrategy = new Strategy(new TransactionStrategy(transaction, messageListener));
+        transactionStrategy.SendTransactionSync();
+        if (messageListener.getConsume_list().stream().anyMatch(val -> val.equals(APIConfiguration.MSG_FAILED)))
+            return APIConfiguration.MSG_FAILED;
+        return APIConfiguration.MSG_SUCCESS;*/
+        database.save(transaction.getFrom(), transaction);
+        database.save(transaction.getTo(), transaction);
+        return "1";
     }
 
     @Override
-    public int updateTransactionByAddress(String from, TransactionDao transaction) {
-        Transaction toSave = HelperConvertDAO.convertDaoToTransaction(transaction);
-        database.save(toSave.getFrom(), toSave);
-        database.save(toSave.getTo(), toSave);
+    public int updateTransactionByAddress(String from, Transaction transaction) {
+        database.save(transaction.getFrom(), transaction);
+        database.save(transaction.getTo(), transaction);
         return 1;
     }
 
@@ -47,10 +53,10 @@ public class TransactionDataAccessRepository implements KVRepository {
     public ResponseDao getTransactionsByAddress(String address) {
         Optional<LevelDBTransactionWrapper<Transaction>> wrapper = database.findByKey(address);
         if (wrapper.isPresent()) {
-            ArrayList<TransactionDao> from = new ArrayList<>();
-            ArrayList<TransactionDao> to = new ArrayList<>();
-            wrapper.get().getFrom().stream().forEach(val -> from.add(HelperConvertDAO.convertTransactionToDao(val)));
-            wrapper.get().getTo().stream().forEach(val -> to.add(HelperConvertDAO.convertTransactionToDao(val)));
+            ArrayList<Transaction> from = new ArrayList<>();
+            ArrayList<Transaction> to = new ArrayList<>();
+            wrapper.get().getFrom().stream().forEach(val -> from.add(val));
+            wrapper.get().getTo().stream().forEach(val -> to.add(val));
             return new ResponseDao(from, to);
         }
         return null;

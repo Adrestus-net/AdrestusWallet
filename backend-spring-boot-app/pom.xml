@@ -120,50 +120,50 @@
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-api</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-api-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-api-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-core</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-core-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/adrestus-core-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-crypto</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-crypto-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-crypto-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-distributed-ledger</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-distributed-ledger-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-distributed-ledger-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-util</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-util-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-util-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-config</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-config-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-config-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
             <groupId>io.Adrestus.v1</groupId>
             <artifactId>adrestus-trie</artifactId>
             <version>${adrestus.version}</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/original-adrestus-trie-1.0-SNAPSHOT.jar</systemPath>
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-trie-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
     </dependencies>
 
@@ -310,7 +310,7 @@
                             <goal>install-file</goal>
                         </goals>
                         <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-core-1.0-SNAPSHOT.jar</file>
+                            <file>${project.basedir}/src/main/resources/adrestus-core-1.0-SNAPSHOT-jar-with-dependencies.jar</file>
                             <groupId>io.Adrestus.v1</groupId>
                             <artifactId>adrestus-core</artifactId>
                             <version>${adrestus.version}</version>

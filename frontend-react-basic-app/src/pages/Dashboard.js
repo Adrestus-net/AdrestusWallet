@@ -21,6 +21,7 @@ import Keypair from '../bundle/KeypairBundle.js';
 import WalletAddress from '../bundle/WalletAddressBundle.js';
 import HashFunction from '../bundle/HashFunctionBundle.js'
 import ECDSASignature from '../bundle/ECDSASignatureBundle'
+import UtilBase64 from '../bundle/UtilBase64Bundle.js'
 import axios from "axios";
 import LockDashboard from "../components/LockDashboard";
 import Status from "../util/Status";
@@ -63,6 +64,7 @@ function Dashboard() {
     const timer = useRef();
     const hash = useRef(new window.HashFunction());
     const sign = useRef(new window.ECDSASignature());
+    const enc=useRef(new window.UtilBase64());
 
     const [remaining, setRemaining] = useState(0)
 
@@ -185,29 +187,31 @@ function Dashboard() {
         }
 
         const transactionModel = new TransactionModel()
-        transactionModel.Type = 'RegularTransactionDao'
-        transactionModel.TransactionDaoType = 'REGULAR'
-        transactionModel.ZoneFrom = formData.zoneFrom
-        transactionModel.ZoneTo = formData.zoneTo
+        transactionModel.Transactiontype = 'RegularTransaction'
+        transactionModel.Type = 'REGULAR'
+        transactionModel.Status='PENDING'
         transactionModel.Timestamp = DateUtil.getTimeInString()
-        transactionModel.From = formData.from
-        transactionModel.To = formData.to
-        transactionModel.Amount = money
-        transactionModel.AmountWithTransactionFee = formData.fees
+        transactionModel.Hash=''
         nonce.current = nonce.current + 1
         transactionModel.Nonce = nonce.current
-        transactionModel.V = 0
-        transactionModel.R = ''
-        transactionModel.S = ''
-        transactionModel.Pub = keys.current.getPubBigInteger
+        transactionModel.BlockNumber=0
+        transactionModel.From = formData.from
+        transactionModel.To = formData.to
+        transactionModel.ZoneFrom = formData.zoneFrom
+        transactionModel.ZoneTo = formData.zoneTo
+        transactionModel.Amount = money
+        transactionModel.AmountWithTransactionFee = formData.fees
         transactionModel.Xaxis = keys.current.getPubPoint.geXAxis
         transactionModel.Yaxis = keys.current.getPubPoint.getYAxis
+        const signature_model = {v:0, r:"", s:"",pub:''};
+        transactionModel.Signature=signature_model
         transactionModel.Hash = hash.current.hashString(JSON.stringify(transactionModel))
         // console.log(JSON.stringify(transactionModel))
         let signature = sign.current.sign(keys.current.getKeypair, transactionModel.hash)
-        transactionModel.V = signature.recoveryParam
-        transactionModel.R = signature.r.toString()
-        transactionModel.S = signature.s.toString()
+        signature_model.v = signature.recoveryParam
+        signature_model.r = enc.current.convertToBase64(signature.r.toString())
+        signature_model.s = enc.current.convertToBase64(signature.s.toString())
+        transactionModel.Signature=signature_model
         const result = await apiRequest(Testnet.TRANSACTION_URL, 'POST', transactionModel, localStorage.getItem("bearer"));
         if (result.status == 200) {
             console.log("success")

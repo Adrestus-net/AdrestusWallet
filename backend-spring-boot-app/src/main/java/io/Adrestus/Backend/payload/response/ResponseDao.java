@@ -2,37 +2,37 @@ package io.Adrestus.Backend.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.Adrestus.Backend.model.TransactionDao;
+import io.Adrestus.core.Transaction;
 
 import java.util.List;
 import java.util.Objects;
 
 public class ResponseDao {
     @JsonProperty(value = "from")
-    private List<TransactionDao> from;
+    private List<Transaction> from;
     @JsonProperty(value = "to")
-    private List<TransactionDao> to;
+    private List<Transaction> to;
 
     @JsonCreator
-    public ResponseDao(List<TransactionDao> from, List<TransactionDao> to) {
+    public ResponseDao(List<Transaction> from, List<Transaction> to) {
         this.from = from;
         this.to = to;
     }
 
 
-    public List<TransactionDao> getFrom() {
+    public List<Transaction> getFrom() {
         return from;
     }
 
-    public void setFrom(List<TransactionDao> from) {
+    public void setFrom(List<Transaction> from) {
         this.from = from;
     }
 
-    public List<TransactionDao> getTo() {
+    public List<Transaction> getTo() {
         return to;
     }
 
-    public void setTo(List<TransactionDao> to) {
+    public void setTo(List<Transaction> to) {
         this.to = to;
     }
 
