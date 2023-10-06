@@ -5,7 +5,7 @@ class UtilBase64 {
     constructor() {
     }
     convertToBase64(hexstring){
-        return new Buffer(new BN(hexstring).toBuffer()).toString('base64');
+        return new Buffer(new BN(hexstring).toArray()).toString('base64');
     }
 }
 global.UtilBase64 = UtilBase64;

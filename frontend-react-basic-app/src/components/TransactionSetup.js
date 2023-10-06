@@ -1,5 +1,5 @@
 import Dropdown from "./Dropdown";
-import React, {useState} from "react";
+import React, {useState,useEffect} from "react";
 import SolidSubtleAlert from "./SolidSubtleAlert";
 import {AiFillExclamationCircle} from "react-icons/ai";
 import InputField from "./fields/InputField";
@@ -19,12 +19,12 @@ const TransactionSetup = (props) => {
 
         if(val==='From Zone 0')
             setFormData({...formData,  zoneFrom: 0});
-        else if(val==='FromZone 1')
+        else if(val==='From Zone 1')
             setFormData({...formData,  zoneFrom: 1});
         else if(val==='From Zone 2')
             setFormData({...formData, zoneFrom: 2});
-        else
-            setFormData({...formData,  zoneFrom: 3});
+        else if(val==='From Zone 3')
+            setFormData({...formData, zoneFrom: 3});
     }
 
     function toggleto(event, bool, val) {
@@ -38,8 +38,8 @@ const TransactionSetup = (props) => {
             setFormData({...formData,  zoneTo: 1});
         else if(val==='To Zone 2')
             setFormData({...formData, zoneTo: 2});
-        else
-            setFormData({...formData,  zoneTo: 3});
+        else if(val==='To Zone 3')
+            setFormData({...formData, zoneTo: 3});
     }
 
     return (

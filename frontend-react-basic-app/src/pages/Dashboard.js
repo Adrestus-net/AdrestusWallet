@@ -25,6 +25,7 @@ import UtilBase64 from '../bundle/UtilBase64Bundle.js'
 import axios from "axios";
 import LockDashboard from "../components/LockDashboard";
 import Status from "../util/Status";
+import Util from "../crypto/Util";
 export const DashBoardContext = createContext();
 function Dashboard() {
     const location = useLocation();
@@ -33,8 +34,8 @@ function Dashboard() {
     const [formData, setFormData] = useState({
         from: '',
         to: '',
-        zoneFrom: '',
-        zoneTo: '',
+        zoneFrom: '0',
+        zoneTo: '0',
         fees: '',
     })
     const [status, setStatus] = useState(Status.Pending);
@@ -112,7 +113,7 @@ function Dashboard() {
                 const response = await apiRequest(Testnet.TRANSACTION_URL + address, 'GET', null, localStorage.getItem("bearer"));
                 if (!response.ok) throw Error('Did not receive expected data');
                 const listItems = await response.json();
-                nonce.current=listItems.from.length;
+                nonce.current = listItems.from.length+1;
                 console.log("Nonce: "+nonce.current)
             } catch (err) {
                 setFetchError(err.message);
@@ -192,21 +193,31 @@ function Dashboard() {
         transactionModel.Status='PENDING'
         transactionModel.Timestamp = DateUtil.getTimeInString()
         transactionModel.Hash=''
-        nonce.current = nonce.current + 1
         transactionModel.Nonce = nonce.current
         transactionModel.BlockNumber=0
         transactionModel.From = formData.from
         transactionModel.To = formData.to
         transactionModel.ZoneFrom = formData.zoneFrom
         transactionModel.ZoneTo = formData.zoneTo
-        transactionModel.Amount = money
-        transactionModel.AmountWithTransactionFee = formData.fees
+        if(Util.isInt(money)) {
+            transactionModel.Amount = money.toFixed(1)
+        }
+        else {
+            transactionModel.Amount = money
+        }
+        if(Util.isInt(formData.fees)) {
+            transactionModel.AmountWithTransactionFee = formData.fees.toFixed(1)
+        }
+        else{
+            transactionModel.AmountWithTransactionFee = formData.fees
+        }
         transactionModel.Xaxis = keys.current.getPubPoint.geXAxis
         transactionModel.Yaxis = keys.current.getPubPoint.getYAxis
         const signature_model = {v:0, r:"", s:"",pub:''};
         transactionModel.Signature=signature_model
-        transactionModel.Hash = hash.current.hashString(JSON.stringify(transactionModel))
-        // console.log(JSON.stringify(transactionModel))
+        var json = Util.trimJsonStringNumbers(JSON.stringify(transactionModel))
+        console.log("String before hash: "+json)
+        transactionModel.Hash = hash.current.hashString(json)
         let signature = sign.current.sign(keys.current.getKeypair, transactionModel.hash)
         signature_model.v = signature.recoveryParam
         signature_model.r = enc.current.convertToBase64(signature.r.toString())
@@ -276,6 +287,7 @@ function Dashboard() {
         setFormData({...formData, fees: bill * (10 / 100)});
         setAmount('');
     }
+
 
     return (
         <div className="mt-3 h-full w-full">
