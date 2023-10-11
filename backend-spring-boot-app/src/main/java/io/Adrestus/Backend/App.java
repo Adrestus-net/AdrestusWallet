@@ -5,6 +5,7 @@ import io.Adrestus.Backend.Config.NetworkConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -14,6 +15,7 @@ import java.net.UnknownHostException;
 import java.util.Properties;
 
 @SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
+@EnableScheduling
 public class App {
     public static void main(String[] args) throws IOException {
         /*Socket socket = new Socket();
