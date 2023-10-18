@@ -113,6 +113,7 @@ public class SyncTransactionBlockTask {
                 });
                 CachedLatestBlocks.getInstance().setTransactionBlock(blocks.get(blocks.size() - 1));
                 LOG.info("Transaction Block Height: "+CachedLatestBlocks.getInstance().getTransactionBlock().getHeight());
+                LOG.info("Transaction List Height: "+CachedLatestBlocks.getInstance().getTransactionBlock().getTransactionList().size());
             }
             if (client != null) {
                 client.close();
