@@ -18,15 +18,15 @@ import java.util.Optional;
 public class BalanceController {
 
     @RequestMapping(value = "api/v1/balance", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody BalanceRequest balanceRequest)
+    public @ResponseBody String createAuthenticationToken(@RequestBody BalanceRequest balanceRequest)
     {
         if(balanceRequest.getAddress().equals("")){
-            return ResponseEntity.ok(0);
+            return "0";
         }
         Option<PatriciaTreeNode> res=TreeFactory.getMemoryTree(balanceRequest.getZone()).getByaddress(balanceRequest.getAddress());
         if(res.isEmpty())
-            return ResponseEntity.ok(0);
+            return "0";
 
-        return ResponseEntity.ok(res.get().getAmount());
+        return String.valueOf(res.get().getAmount());
     }
 }

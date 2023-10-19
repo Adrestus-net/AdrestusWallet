@@ -309,7 +309,10 @@ function Dashboard() {
                     {stages == Stages.Stage1 &&
                         <div className="sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 content-between gap-4">
                             <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
-                                <Balance balance={balance}/>
+                                <Balance
+                                    balance={balance}
+                                    setBalance={setBalance}
+                                />
                             </div>
                             <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
                                 <Address address={address}/>

@@ -6,6 +6,9 @@ public class BalanceRequest {
     private String address;
     private int zone;
 
+    public BalanceRequest() {
+    }
+
     public BalanceRequest(String address, int zone) {
         this.address = address;
         this.zone = zone;
