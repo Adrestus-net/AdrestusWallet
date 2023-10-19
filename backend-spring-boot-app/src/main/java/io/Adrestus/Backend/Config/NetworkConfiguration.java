@@ -29,8 +29,8 @@ public class NetworkConfiguration implements ApplicationListener<ApplicationEnvi
         ConfigurableEnvironment environment = event.getEnvironment();
         Socket socket = new Socket();
         socket.connect(new InetSocketAddress("google.com", 80));
+        setHost(socket.getLocalAddress().getHostAddress());
         socket.close();
-        setHost(InetAddress.getLocalHost().getHostAddress());
         MutablePropertySources propertySources = environment.getPropertySources();
         Map<String, Object> map = new HashMap<>();
         map.put("server.address", this.host);

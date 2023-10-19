@@ -17,7 +17,7 @@ import java.util.Properties;
 @SpringBootApplication(exclude = {org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration.class})
 @EnableScheduling
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         /*Socket socket = new Socket();
         socket.connect(new InetSocketAddress("google.com", 80));
         socket.close();
@@ -33,7 +33,6 @@ public class App {
         props.put("server.port", "8080");*/
         SpringApplication app = new SpringApplication(App.class);
         app.addListeners(new NetworkConfiguration());
-        app.addListeners(new ConsensusConfiguration());
         app.run(args);
     }
 }

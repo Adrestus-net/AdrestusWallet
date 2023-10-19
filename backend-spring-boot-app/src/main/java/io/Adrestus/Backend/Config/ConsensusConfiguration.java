@@ -4,6 +4,7 @@ package io.Adrestus.Backend.Config;
 import com.google.common.reflect.TypeToken;
 import io.Adrestus.MemoryTreePool;
 import io.Adrestus.TreeFactory;
+import io.Adrestus.Trie.PatriciaTreeNode;
 import io.Adrestus.api.MessageListener;
 import io.Adrestus.api.Strategy;
 import io.Adrestus.api.TransactionStrategy;
@@ -32,6 +33,7 @@ import io.Adrestus.crypto.mnemonic.Security;
 import io.Adrestus.crypto.mnemonic.WordList;
 import io.Adrestus.crypto.vdf.engine.VdfEngine;
 import io.Adrestus.mapper.MemoryTreePoolSerializer;
+import io.Adrestus.network.CachedEventLoop;
 import io.Adrestus.p2p.kademlia.common.NettyConnectionInfo;
 import io.Adrestus.p2p.kademlia.node.KeyHashGenerator;
 import io.Adrestus.p2p.kademlia.repository.KademliaData;
@@ -191,6 +193,62 @@ public class ConsensusConfiguration implements ApplicationListener<ApplicationEn
         ECDSASignatureData signatureData6 = ecdsaSign.secp256SignMessage(HashUtil.sha256(StringUtils.getBytesUtf8(address6)), ecKeyPair6);
         ECDSASignatureData signatureData7 = ecdsaSign.secp256SignMessage(HashUtil.sha256(StringUtils.getBytesUtf8(address7)), ecKeyPair7);
 
+        TreeFactory.getMemoryTree(0).store(address1, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address2, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address3, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address4, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address5, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address6, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address7, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address8, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address9, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address10, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address11, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store(address12, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(0).store("ADR-GBIV-HG2J-27P5-BNVN-MLN6-DL5V-M3YZ-PKEJ-CFFG-FK4L", new PatriciaTreeNode(1000, 0));
+
+        TreeFactory.getMemoryTree(1).store(address1, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address2, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address3, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address4, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address5, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address6, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address7, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address8, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address9, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address10, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address11, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store(address12, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(1).store("ADR-GBIV-HG2J-27P5-BNVN-MLN6-DL5V-M3YZ-PKEJ-CFFG-FK4L", new PatriciaTreeNode(1000, 0));
+
+        TreeFactory.getMemoryTree(2).store(address1, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address2, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address3, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address4, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address5, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address6, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address7, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address8, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address9, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address10, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address11, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store(address12, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(2).store("ADR-GBIV-HG2J-27P5-BNVN-MLN6-DL5V-M3YZ-PKEJ-CFFG-FK4L", new PatriciaTreeNode(1000, 0));
+
+        TreeFactory.getMemoryTree(3).store(address1, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address2, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address3, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address4, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address5, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address6, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address7, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address8, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address9, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address10, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address11, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store(address12, new PatriciaTreeNode(3000, 0));
+        TreeFactory.getMemoryTree(3).store("ADR-GBIV-HG2J-27P5-BNVN-MLN6-DL5V-M3YZ-PKEJ-CFFG-FK4L", new PatriciaTreeNode(1000, 0));
+
         kad1 = new KademliaData(new SecurityAuditProofs(address1, vk1, ecKeyPair1.getPublicKey(), signatureData1), new NettyConnectionInfo("192.168.1.106", KademliaConfiguration.PORT));
         kad2 = new KademliaData(new SecurityAuditProofs(address2, vk2, ecKeyPair2.getPublicKey(), signatureData2), new NettyConnectionInfo("192.168.1.113", KademliaConfiguration.PORT));
         kad3 = new KademliaData(new SecurityAuditProofs(address3, vk3, ecKeyPair3.getPublicKey(), signatureData3), new NettyConnectionInfo("192.168.1.116", KademliaConfiguration.PORT));
@@ -202,17 +260,17 @@ public class ConsensusConfiguration implements ApplicationListener<ApplicationEn
         committeeBlock.getStructureMap().get(0).put(vk1, "192.168.1.106");
         committeeBlock.getStructureMap().get(0).put(vk2, "192.168.1.113");
         committeeBlock.getStructureMap().get(0).put(vk3, "192.168.1.116");
-        committeeBlock.getStructureMap().get(1).put(vk4, "192.168.1.110");
-        committeeBlock.getStructureMap().get(1).put(vk5, "192.168.1.112");
-        committeeBlock.getStructureMap().get(1).put(vk6, "192.168.1.115");
+        //committeeBlock.getStructureMap().get(1).put(vk4, "192.168.1.110");
+        // committeeBlock.getStructureMap().get(1).put(vk5, "192.168.1.112");
+        // committeeBlock.getStructureMap().get(1).put(vk6, "192.168.1.115");
 
 
         committeeBlock.getStakingMap().put(new StakingData(1, 10.0), kad1);
         committeeBlock.getStakingMap().put(new StakingData(2, 11.0), kad2);
         committeeBlock.getStakingMap().put(new StakingData(3, 151.0), kad3);
-        committeeBlock.getStakingMap().put(new StakingData(4, 16.0), kad4);
-        committeeBlock.getStakingMap().put(new StakingData(5, 271.0), kad5);
-        committeeBlock.getStakingMap().put(new StakingData(6, 281.0), kad6);
+        // committeeBlock.getStakingMap().put(new StakingData(4, 16.0), kad4);
+        // committeeBlock.getStakingMap().put(new StakingData(5, 271.0), kad5);
+        // committeeBlock.getStakingMap().put(new StakingData(6, 281.0), kad6);
 
         CachedLatestBlocks.getInstance().setCommitteeBlock(committeeBlock);
 
@@ -262,6 +320,8 @@ public class ConsensusConfiguration implements ApplicationListener<ApplicationEn
         patricia_tree1.save(TreeFactory.getMemoryTree(1).getHeight(),patricia_tree_wrapper.encode(TreeFactory.getMemoryTree(1)));
         patricia_tree2.save(TreeFactory.getMemoryTree(2).getHeight(),patricia_tree_wrapper.encode(TreeFactory.getMemoryTree(2)));
         patricia_tree3.save(TreeFactory.getMemoryTree(3).getHeight(),patricia_tree_wrapper.encode(TreeFactory.getMemoryTree(3)));
+
+        CachedEventLoop.getInstance().start();
     }
 
     //    public ConsensusConfiguration() {
@@ -270,7 +330,7 @@ public class ConsensusConfiguration implements ApplicationListener<ApplicationEn
 //    }
 
 
-//Use this only to test workerTest
+    //Use this only to test workerTest
 //    @Override
 //    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
 //        IDatabase<String, CommitteeBlock> committeeBlockIDatabase = new DatabaseFactory(String.class, CommitteeBlock.class).getDatabase(DatabaseType.ROCKS_DB, DatabaseInstance.COMMITTEE_BLOCK);
@@ -294,8 +354,8 @@ public class ConsensusConfiguration implements ApplicationListener<ApplicationEn
 //        CachedLeaderIndex.getInstance().setTransactionPositionLeader(0);
 //
 //    }
-     @Override
-     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
+    @Override
+    public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
 
     }
 

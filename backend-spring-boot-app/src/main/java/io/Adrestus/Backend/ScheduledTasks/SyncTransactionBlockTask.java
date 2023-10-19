@@ -43,6 +43,7 @@ public class SyncTransactionBlockTask {
         List<SerializationUtil.Mapping> list2 = new ArrayList<>();
         patricia_tree_wrapper = new SerializationUtil<>(fluentType, list);
     }
+
     @Scheduled(fixedRate = APIConfiguration.TRANSACTION_BLOCK_RATE)
     public void syncBlock() {
         syncBlock(0);
@@ -51,12 +52,13 @@ public class SyncTransactionBlockTask {
         syncBlock(3);
     }
 
+    //MAKE SURE DELETEDB TEST IS RUNNING BEFORE EXECUTE THIS CODE
     @SneakyThrows
     public void syncBlock(int zone) {
         CommitteeBlock committee = (CommitteeBlock) CachedLatestBlocks.getInstance().getCommitteeBlock().clone();
         List<String> new_ips = committee.getStructureMap().get(zone).values().stream().collect(Collectors.toList());
 
-        if(new_ips.isEmpty())
+        if (new_ips.isEmpty())
             return;
 
         int RPCTransactionZonePort = ZoneDatabaseFactory.getDatabaseRPCPort(zone);
@@ -79,9 +81,13 @@ public class SyncTransactionBlockTask {
             IDatabase<String, LevelDBTransactionWrapper<Transaction>> transaction_database = new DatabaseFactory(String.class, Transaction.class, new TypeToken<LevelDBTransactionWrapper<Transaction>>() {
             }.getType()).getDatabase(DatabaseType.LEVEL_DB);
             IDatabase<String, TransactionBlock> block_database = new DatabaseFactory(String.class, TransactionBlock.class).getDatabase(DatabaseType.ROCKS_DB, ZoneDatabaseFactory.getZoneInstance(zone));
-            client = new RpcAdrestusClient(new TransactionBlock(), toConnectTransaction, CachedEventLoop.getInstance().getEventloop());
-            client.connect();
-
+            try {
+                client = new RpcAdrestusClient(new TransactionBlock(), toConnectTransaction, CachedEventLoop.getInstance().getEventloop());
+                client.connect();
+            } catch (IllegalArgumentException e) {
+                LOG.info(e.toString());
+                return;
+            }
             Optional<TransactionBlock> block = block_database.seekLast();
             Map<String, TransactionBlock> toSave = new HashMap<>();
             List<TransactionBlock> blocks;
@@ -102,25 +108,34 @@ public class SyncTransactionBlockTask {
                 }
             }
 
+            if(patriciaRootList == null){
+                if (client != null) {
+                    client.close();
+                    client = null;
+                }
+                return;
+            }
             block_database.saveAll(toSave);
 
             if (!blocks.isEmpty()) {
-                blocks.stream().forEach(transactionBlock->{
-                    transactionBlock.getTransactionList().stream().forEach(transaction->{
+                blocks.stream().forEach(transactionBlock -> {
+                    transactionBlock.getTransactionList().stream().forEach(transaction -> {
                         transaction_database.save(transaction.getFrom(), transaction);
                         transaction_database.save(transaction.getTo(), transaction);
                     });
                 });
                 CachedLatestBlocks.getInstance().setTransactionBlock(blocks.get(blocks.size() - 1));
-                LOG.info("Transaction Block Height: "+CachedLatestBlocks.getInstance().getTransactionBlock().getHeight());
-                LOG.info("Transaction List Height: "+CachedLatestBlocks.getInstance().getTransactionBlock().getTransactionList().size());
+                LOG.info("Transaction Block Height: " + CachedLatestBlocks.getInstance().getTransactionBlock().getHeight());
+                LOG.info("Transaction List Height: " + CachedLatestBlocks.getInstance().getTransactionBlock().getTransactionList().size());
             }
+
             if (client != null) {
                 client.close();
                 client = null;
             }
 
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
 
 
@@ -158,6 +173,15 @@ public class SyncTransactionBlockTask {
                     });
                 }
             }
+
+            if (toSave == null || patriciaRootList==null) {
+                if (client != null) {
+                    client.close();
+                    client = null;
+                }
+                return;
+            }
+
             List<String> finalPatriciaRootList = patriciaRootList;
             Map<String, byte[]> toCollect = toSave.entrySet().stream()
                     .filter(x -> !finalPatriciaRootList.contains(x.getKey()))
@@ -166,7 +190,8 @@ public class SyncTransactionBlockTask {
             byte[] current_tree = toCollect.get(String.valueOf(CachedLatestBlocks.getInstance().getTransactionBlock().getHeight()));
             TreeFactory.setMemoryTree((MemoryTreePool) patricia_tree_wrapper.decode(current_tree), zone);
 
-            LOG.info("TreeFactory Height: "+TreeFactory.getMemoryTree(zone).getHeight());
+
+            LOG.info("TreeFactory Height: " + TreeFactory.getMemoryTree(zone).getHeight());
             if (client != null) {
                 client.close();
                 client = null;

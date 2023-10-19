@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Component
 public class SyncCommitteeBlockTask {
     private static final Logger LOG = LoggerFactory.getLogger(SyncCommitteeBlockTask.class);
+
     @Scheduled(fixedRate = APIConfiguration.COMMITTEE_BLOCK_RATE)
     public void syncBlock() {
         IDatabase<String, CommitteeBlock> committeeBlockIDatabase = new DatabaseFactory(String.class, CommitteeBlock.class).getDatabase(DatabaseType.ROCKS_DB, DatabaseInstance.COMMITTEE_BLOCK);
@@ -37,10 +38,14 @@ public class SyncCommitteeBlockTask {
                 throw new RuntimeException(e);
             }
         });
-
-        RpcAdrestusClient client1 = new RpcAdrestusClient(new CommitteeBlock(), toConnectCommittee, CachedEventLoop.getInstance().getEventloop());
-        client1.connect();
-
+        RpcAdrestusClient client1;
+        try {
+            client1 = new RpcAdrestusClient(new CommitteeBlock(), toConnectCommittee, CachedEventLoop.getInstance().getEventloop());
+            client1.connect();
+        } catch (IllegalArgumentException e) {
+            LOG.info(e.toString());
+            return;
+        }
         List<CommitteeBlock> commitee_blocks = client1.getBlocksList(String.valueOf(CachedLatestBlocks.getInstance().getCommitteeBlock().getHeight()));
 
         if (client1 != null) {
@@ -52,9 +57,9 @@ public class SyncCommitteeBlockTask {
             return;
 
 
-        commitee_blocks.stream().skip(1).forEach(block->committeeBlockIDatabase.save(String.valueOf(block.getHeight()),block));
+        commitee_blocks.stream().skip(1).forEach(block -> committeeBlockIDatabase.save(String.valueOf(block.getHeight()), block));
         CachedLatestBlocks.getInstance().setCommitteeBlock(commitee_blocks.get(commitee_blocks.size() - 1));
 
-        LOG.info("Committee Block Height: "+CachedLatestBlocks.getInstance().getCommitteeBlock().getHeight());
+        LOG.info("Committee Block Height: " + CachedLatestBlocks.getInstance().getCommitteeBlock().getHeight());
     }
 }
