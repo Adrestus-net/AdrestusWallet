@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState,createContext} from 'react';
+import React, {useEffect, useRef, useState, createContext} from 'react';
 import Card from "../components/card";
 import Balance from "../components/Balance";
 import Address from "../components/Address";
@@ -15,7 +15,7 @@ import {useLocation} from "react-router-dom";
 import apiRequest from "../Services/apiRequest";
 import TransactionModel from '../model/TransactionModel'
 import DateUtil from '../util/DateUtil.js'
-import { useIdleTimer } from 'react-idle-timer'
+import {useIdleTimer} from 'react-idle-timer'
 import Mnemonic from '../bundle/MnemonicBundle.js'
 import Keypair from '../bundle/KeypairBundle.js';
 import WalletAddress from '../bundle/WalletAddressBundle.js';
@@ -26,7 +26,10 @@ import axios from "axios";
 import LockDashboard from "../components/LockDashboard";
 import Status from "../util/Status";
 import Util from "../crypto/Util";
+import BalanceModel from "../model/BalanceModel";
+
 export const DashBoardContext = createContext();
+
 function Dashboard() {
     const location = useLocation();
     const state = location.state;
@@ -40,9 +43,10 @@ function Dashboard() {
     })
     const [status, setStatus] = useState(Status.Pending);
     const [money, setMoney] = useState('')
+    const [APIMessage, setAPIMessage] = useState('')
     const [address, setAddress] = useState(state.address)
     const [mnemArray, setMnemArray] = useState(state.mnemArray)
-    const [password,setPassword]=useState(state.formData.password)
+    const [password, setPassword] = useState(state.formData.password)
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [Arrfrom, setArrfrom] = useState(new Array(0));
@@ -52,7 +56,7 @@ function Dashboard() {
     const [stages, setStages] = useState(Stages.Stage1);
     const [balance, setBalance] = useState(100);
     const [fetchError, setFetchError] = useState(null);
-    const [transaction,setTransaction]=useState(null);
+    const [transaction, setTransaction] = useState(null);
     const [moedas, setMoedas] = useState([]);
 
 
@@ -65,20 +69,21 @@ function Dashboard() {
     const timer = useRef();
     const hash = useRef(new window.HashFunction());
     const sign = useRef(new window.ECDSASignature());
-    const enc=useRef(new window.UtilBase64());
+    const enc = useRef(new window.UtilBase64());
 
     const [remaining, setRemaining] = useState(0)
 
     const onIdle = () => {
-       setStages(Stages.Stage3)
+        setStages(Stages.Stage3)
     }
 
     const onActive = () => {
     }
 
-    const onAction = () => {}
+    const onAction = () => {
+    }
 
-    const { getRemainingTime } = useIdleTimer({
+    const {getRemainingTime} = useIdleTimer({
         onIdle,
         onActive,
         onAction,
@@ -113,14 +118,35 @@ function Dashboard() {
                 const response = await apiRequest(Testnet.TRANSACTION_URL + address, 'GET', null, localStorage.getItem("bearer"));
                 if (!response.ok) throw Error('Did not receive expected data');
                 const listItems = await response.json();
-                nonce.current = listItems.from.length+1;
-                console.log("Nonce: "+nonce.current)
+                nonce.current = listItems.from.length + 1;
+                console.log("Nonce: " + nonce.current)
+                setTransaction(listItems)
+                setArrfrom(listItems.from)
+                setArrTo(listItems.to)
+                setFetchError(null);
+            } catch (err) {
+                setFetchError(err.message);
+            } finally {
+            }
+        }
+        const fetchBalance = async () => {
+            try {
+                const balancemodel = new BalanceModel()
+                balancemodel.Address = address
+                balancemodel.Zone = 0
+                const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
+                if (result.status == 200) {
+                    result.text().then(function (val){
+                        setBalance(val)
+                    });
+                }
             } catch (err) {
                 setFetchError(err.message);
             } finally {
             }
         }
         fetchItems()
+        fetchBalance()
 
         axios
             .get(
@@ -142,6 +168,7 @@ function Dashboard() {
                         console.log(response)
                         if (!response.ok) throw Error('Did not receive expected data');
                         const listItems = await response.json();
+                        nonce.current = listItems.from.length + 1;
                         console.log(listItems)
                         setTransaction(listItems)
                         //listItems.from.map(val => console.log(JSON.stringify(val)));
@@ -169,15 +196,24 @@ function Dashboard() {
 
     const handleRegistration = async (e) => {
         e.preventDefault()
+
+        if (formData.from.length != 53) {
+            setFrom("from Address Length is invalid")
+            return
+        }
+        if(formData.to.length!=53){
+            setTo("to Address Length is invalid ")
+            return
+        }
         if (from != '' || to != "" || amount != '') {
             setStages(Stages.Stage2)
-            setMessage("Field are not correct please make sure they are all correct")
+            setMessage("Fields are not correct please make sure they are all correct")
             return
         }
 
-        if (formData.from=== ""|| formData.to=== "") {
+        if (formData.from === "" || formData.to === "") {
             setStages(Stages.Stage2)
-            setMessage("Field are not correct please make sure they are all correct")
+            setMessage("Fields are not correct please make sure they are all correct")
             return
         }
 
@@ -187,48 +223,64 @@ function Dashboard() {
             return;
         }
 
+        var bill = Number(money);
+        console.log("bill"+bill)
+        if (isNaN(bill)|| bill===0) {
+            setStages(Stages.Stage2)
+            setAmount("Not sufficient balances")
+            return;
+        }
+
+        if (balance < bill+(bill * (10 / 100))) {
+            setStages(Stages.Stage2)
+            setAmount("Not sufficient balances")
+            return;
+        }
+
         const transactionModel = new TransactionModel()
         transactionModel.Transactiontype = 'RegularTransaction'
         transactionModel.Type = 'REGULAR'
-        transactionModel.Status='PENDING'
+        transactionModel.Status = 'PENDING'
         transactionModel.Timestamp = DateUtil.getTimeInString()
-        transactionModel.Hash=''
+        transactionModel.Hash = ''
         transactionModel.Nonce = nonce.current
-        transactionModel.BlockNumber=0
+        transactionModel.BlockNumber = 0
         transactionModel.From = formData.from
         transactionModel.To = formData.to
         transactionModel.ZoneFrom = formData.zoneFrom
         transactionModel.ZoneTo = formData.zoneTo
-        if(Util.isInt(money)) {
+        if (Util.isInt(money)) {
             transactionModel.Amount = money.toFixed(1)
-        }
-        else {
+        } else {
             transactionModel.Amount = money
         }
-        if(Util.isInt(formData.fees)) {
+        if (Util.isInt(formData.fees)) {
             transactionModel.AmountWithTransactionFee = formData.fees.toFixed(1)
-        }
-        else{
+        } else {
             transactionModel.AmountWithTransactionFee = formData.fees
         }
         transactionModel.Xaxis = keys.current.getPubPoint.geXAxis
         transactionModel.Yaxis = keys.current.getPubPoint.getYAxis
-        const signature_model = {v:0, r:"", s:"",pub:''};
-        transactionModel.Signature=signature_model
+        const signature_model = {v: 0, r: "", s: "", pub: ''};
+        transactionModel.Signature = signature_model
         var json = Util.trimJsonStringNumbers(JSON.stringify(transactionModel))
-        console.log("String before hash: "+json)
+        console.log("String before hash: " + json)
         transactionModel.Hash = hash.current.hashString(json)
         let signature = sign.current.sign(keys.current.getKeypair, transactionModel.hash)
         signature_model.v = signature.recoveryParam
         signature_model.r = enc.current.convertToBase64(signature.r.toString())
         signature_model.s = enc.current.convertToBase64(signature.s.toString())
-        transactionModel.Signature=signature_model
+        transactionModel.Signature = signature_model
         const result = await apiRequest(Testnet.TRANSACTION_URL, 'POST', transactionModel, localStorage.getItem("bearer"));
         if (result.status == 200) {
             console.log("success")
+            result.text().then(function (val){
+                setAPIMessage(val)
+            });
         }
-        console.log(result)
-        setStages(Stages.Stage1)
+        else {
+            setMessage("Transaction Failed to send to Adrestus Network Please try again later")
+        }
     }
     const onChangeText = (e) => {
         e.preventDefault()
@@ -243,7 +295,7 @@ function Dashboard() {
         } else {
             if (e.target.name == 'from') {
                 setFormData({...formData, from: e.target.value});
-            } else if(e.target.name == 'to') {
+            } else if (e.target.name == 'to') {
                 setFormData({...formData, to: e.target.value});
             }
         }
@@ -251,18 +303,18 @@ function Dashboard() {
             if (e.target.name == 'from') {
                 setFrom("from Address is invalid please type a correct Address")
                 return;
-            } else if(e.target.name == 'to') {
+            } else if (e.target.name == 'to') {
                 setTo("to Address is invalid please type a correct Address")
                 return;
             }
         } else {
             if (e.target.name == 'from') {
                 setFormData({...formData, from: e.target.value});
-            } else if(e.target.name == 'to') {
+            } else if (e.target.name == 'to') {
                 setFormData({...formData, to: e.target.value});
             }
         }
-       setAmount('')
+        setAmount('')
     }
 
     const onAmountCheck = (e) => {
@@ -276,7 +328,7 @@ function Dashboard() {
             return
         }
 
-        if (balance < bill) {
+        if (balance < bill+(bill * (10 / 100))) {
             setAmount("Not sufficient balance")
             setMoney(bill)
             document.getElementById("fees").value = bill * (10 / 100);
@@ -297,42 +349,43 @@ function Dashboard() {
                 <div className="-mt-[280px] w-full pb-10 md:-mt-[240px] md:px-[70px]">
                 </div>
 
-                <Card extra="max-w-[805px] md:max-w-[810px] md:w-[910px] h-max min-w-full mx-2.5 md:mx-auto mt-[150px] mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
+                <Card
+                    extra="max-w-[805px] md:max-w-[810px] md:w-[910px] h-max min-w-full mx-2.5 md:mx-auto mt-[150px] mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
                     {/*<div className="flex flex-row flex flex-nowrap justify-end mx-auto p-4 rounded-full border-gray-800 border-2 border-light-blue-500 border-opacity-50">*/}
-                    <DashBoardContext.Provider value={{transaction,address}}>
-                    <DashBoardNavBar
-                        dropDown={dropDown}
-                        setDropdown={setDropdown}
-                        darkmode={darkmode}
-                        setDarkmode={setDarkmode}
-                    />
-                    {stages == Stages.Stage1 &&
-                        <div className="sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 content-between gap-4">
-                            <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
-                                <Balance
-                                    balance={balance}
-                                    setBalance={setBalance}
-                                />
+                    <DashBoardContext.Provider value={{transaction, address}}>
+                        <DashBoardNavBar
+                            dropDown={dropDown}
+                            setDropdown={setDropdown}
+                            darkmode={darkmode}
+                            setDarkmode={setDarkmode}
+                        />
+                        {stages == Stages.Stage1 &&
+                            <div className="sm:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 content-between gap-4">
+                                <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
+                                    <Balance
+                                        balance={balance}
+                                        setBalance={setBalance}
+                                    />
+                                </div>
+                                <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
+                                    <Address address={address}/>
+                                </div>
+                                <div className="my-2 py-3 px-6 sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2">
+                                    <DashboardButtons
+                                        setStages={setStages}/>
+                                </div>
+                                <div className="sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1 h-full">
+                                    <TransactionView/>
+                                </div>
+                                <div className="sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1 h-full">
+                                    <Market moedas={moedas}/>
+                                </div>
+                                <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2">
+                                    <Invoice address={address}/>
+                                </div>
                             </div>
-                            <div className="sm:col-span-2 md:col-span-1 lg:col-span-1 xl:col-span-1">
-                                <Address address={address}/>
-                            </div>
-                            <div className="my-2 py-3 px-6 sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2">
-                                <DashboardButtons
-                                    setStages={setStages}/>
-                            </div>
-                            <div className="sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1 h-full">
-                                <TransactionView/>
-                            </div>
-                            <div className="sm:col-span-2 md:col-span-2 lg:col-span-1 xl:col-span-1 h-full">
-                                <Market moedas={moedas}/>
-                            </div>
-                            <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2">
-                                <Invoice address={address}/>
-                            </div>
-                        </div>
-                    }
-                </DashBoardContext.Provider>
+                        }
+                    </DashBoardContext.Provider>
                     {stages == Stages.Stage2 &&
                         <TransactionSetup
                             setStages={setStages}
@@ -348,7 +401,9 @@ function Dashboard() {
                             setFormData={setFormData}
                             handleRegistration={handleRegistration}
                             onchange={onChangeText}
-                            onAmountCheck={onAmountCheck}/>
+                            onAmountCheck={onAmountCheck}
+                            APIMessage={APIMessage}
+                            setAPIMessage={setAPIMessage}/>
                     }
 
                     {stages == Stages.Stage3 &&

@@ -5,8 +5,9 @@ import {AiFillExclamationCircle} from "react-icons/ai";
 import InputField from "./fields/InputField";
 import {useNavigate} from "react-router-dom";
 import Stages from "../util/Stages";
+import {BsFillCheckCircleFill} from "react-icons/bs";
 const TransactionSetup = (props) => {
-    const {setStages,from,setFrom, to,setTo, amount,setAmount, message,setMessage,formData,setFormData, handleRegistration, onchange, onAmountCheck} = props;
+    const {setStages,from,setFrom, to,setTo, amount,setAmount, message,setMessage,formData,setFormData, handleRegistration, onchange, onAmountCheck,APIMessage,setAPIMessage} = props;
     const [isfromOpened, setIsfromOpened] = useState(false);
     const [fromdropDown, setFromDropdown] = React.useState('From Zone 0');
     const [istoOpened, setIstoOpened] = useState(false);
@@ -203,19 +204,36 @@ const TransactionSetup = (props) => {
                         readonly={true}
                         result=''
                     />
-                    {message !== "" && <div class="col-span-2">
-                        <SolidSubtleAlert
-                            title="Transaction General Error"
-                            description={message}
-                            icon={<AiFillExclamationCircle/>}
-                            iconColor="text-white dark:!text-navy-900"
-                            closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
-                            bg="bg-red-500 dark:!bg-red-300"
-                            mb="pt-2 pb-2"
-                            solid="solid"
-                            setResult={setMessage}
-                        />
-                    </div>}
+                    {message !== "" &&
+                        <div class="col-span-2">
+                            <SolidSubtleAlert
+                                title="Transaction General Error"
+                                description={message}
+                                icon={<AiFillExclamationCircle/>}
+                                iconColor="text-white dark:!text-navy-900"
+                                closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
+                                bg="bg-red-500 dark:!bg-red-300"
+                                mb="pt-2 pb-2"
+                                solid="solid"
+                                setResult={setMessage}
+                            />
+                        </div>
+                        }
+                        {APIMessage !== "" &&
+                            <div class="col-span-2">
+                            <SolidSubtleAlert
+                                title="Transaction send Successful to Adrestus Network"
+                                description={APIMessage}
+                                icon={<BsFillCheckCircleFill/>}
+                                iconColor="text-white dark:!text-navy-900"
+                                bg="bg-green-500 dark:!bg-green-300"
+                                mb="mb-6"
+                                closeBg="hover:bg-white/20 text-white dark:!text-navy-900"
+                                solid="solid"
+                                setResult={setAPIMessage}
+                            />
+                            </div>
+                        }
                     <div>
                         <button
                             onClick={() =>  setStages(Stages.Stage1)}

@@ -7,7 +7,7 @@ import {AiFillExclamationCircle} from "react-icons/ai";
 import Checkbox from "../../components/Checkbox";
 
 const RegisterStage1 = (props) => {
-    const {onStage1Submit,onClick,mnemonic,name_state,onChange,last_name_state,email_state,password_state,repeat_password_state,status,Message} = props;
+    const {onStage1Submit,onClick,mnemonic,name_state,onChange,last_name_state,email_state,password_state,repeat_password_state,status,Message,setErrMessage} = props;
     return (
         <Card
             extra="max-w-[405px] md:max-w-[510px] h-max mx-2.5 md:mx-auto mt-12 mb-auto py-2.5 px-4 md:!p-[50px] pt-8 md:pt-[50px]">
@@ -112,7 +112,7 @@ const RegisterStage1 = (props) => {
                         />
                     </div>
                     <div>
-                        {status == Status.Reject &&
+                        {Message !== '' &&
                             <SolidSubtleAlert
                                 title="SignUP Error"
                                 description={Message}
@@ -122,6 +122,7 @@ const RegisterStage1 = (props) => {
                                 bg="bg-red-500 dark:!bg-red-300"
                                 mb="pt-2 pb-2"
                                 solid="solid"
+                                setResult={setErrMessage}
                             />
                         }
                     </div>

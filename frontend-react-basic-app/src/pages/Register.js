@@ -303,7 +303,9 @@ function Register() {
                              password_state={password_state}
                              repeat_password_state={repeat_password_state}
                              status={status}
-                             Message={Message}/>
+                             Message={Message}
+                             setErrMessage={setErrMessage}
+                         />
                         : stages === Stages.Stage2 ?
                            <RegisterStage2
                                selected={selected}

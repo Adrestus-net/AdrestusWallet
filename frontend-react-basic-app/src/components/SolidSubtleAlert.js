@@ -13,11 +13,10 @@ function SolidSubtleAlert(props) {
         solid,
         iconColor,
         setResult,
-        setStatus
     } = props;
     const onClick = () => {
         setResult('');
-        setStatus(Status.Reject)
+       // setStatus(Status.Reject)
     }
     return (
         <div

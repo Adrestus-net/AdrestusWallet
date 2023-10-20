@@ -51,11 +51,13 @@ const Balance = (props) => {
                 className={`bg-image relative mt-[7px] flex h-fit w-full justify-between rounded-xl bg-brand-900 bg-ballanceDashboard bg-cover bg-right px-3 py-4 text-white dark:bg-navy-700`}
                 bgSize="cover"
             >
-                <div class="flex flex-row gap-4">
-                    <div>
-                        <h5 className="text-[28px] !font-bold [word-spacing:25px]">{balance} ADR</h5>
+                <div class="flex flex-col flex-wrap content-center">
+                    <div class="flex-row flex-wrap justify-end">
+                        <div>
+                            <h5 className="px-6 text-[28px] !font-bold [word-spacing:55px]">{balance} ADR</h5>
+                        </div>
                     </div>
-                    <div>
+                    <div class="flex-row flex-wrap justify-end">
                         <Dropdown
                             button={
                                 <button id="togglefrom"
