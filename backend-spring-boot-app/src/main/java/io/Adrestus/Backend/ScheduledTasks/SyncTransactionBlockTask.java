@@ -5,9 +5,7 @@ import com.google.common.reflect.TypeToken;
 import io.Adrestus.Backend.Config.APIConfiguration;
 import io.Adrestus.MemoryTreePool;
 import io.Adrestus.TreeFactory;
-import io.Adrestus.config.NetworkConfiguration;
 import io.Adrestus.core.CommitteeBlock;
-import io.Adrestus.core.RegularBlock;
 import io.Adrestus.core.Resourses.CachedLatestBlocks;
 import io.Adrestus.core.Resourses.CachedZoneIndex;
 import io.Adrestus.core.Transaction;
@@ -28,6 +26,10 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
@@ -45,11 +47,50 @@ public class SyncTransactionBlockTask {
     }
 
     @Scheduled(fixedRate = APIConfiguration.TRANSACTION_BLOCK_RATE)
-    public void syncBlock() {
-        syncBlock(0);
-        syncBlock(1);
-        syncBlock(2);
-        syncBlock(3);
+    public void syncBlock() throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(4);
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncBlock(0);
+                latch.countDown();
+            }
+        });
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncBlock(1);
+                latch.countDown();
+
+            }
+        });
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncBlock(2);
+                latch.countDown();
+            }
+        });
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                syncBlock(3);
+                latch.countDown();
+            }
+        });
+
+        latch.await();
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(800, TimeUnit.MILLISECONDS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+        executorService = null;
     }
 
     //MAKE SURE DELETEDB TEST IS RUNNING BEFORE EXECUTE THIS CODE
@@ -108,7 +149,7 @@ public class SyncTransactionBlockTask {
                 }
             }
 
-            if(patriciaRootList == null){
+            if (patriciaRootList == null) {
                 if (client != null) {
                     client.close();
                     client = null;
@@ -174,7 +215,7 @@ public class SyncTransactionBlockTask {
                 }
             }
 
-            if (toSave == null || patriciaRootList==null) {
+            if (toSave == null || patriciaRootList == null) {
                 if (client != null) {
                     client.close();
                     client = null;
@@ -188,6 +229,13 @@ public class SyncTransactionBlockTask {
                     .collect(Collectors.toMap(x -> x.getKey(), x -> x.getValue()));
             tree_database.saveAll(toCollect);
             byte[] current_tree = toCollect.get(String.valueOf(CachedLatestBlocks.getInstance().getTransactionBlock().getHeight()));
+            if (current_tree == null) {
+                if (client != null) {
+                    client.close();
+                    client = null;
+                }
+                return;
+            }
             TreeFactory.setMemoryTree((MemoryTreePool) patricia_tree_wrapper.decode(current_tree), zone);
 
 

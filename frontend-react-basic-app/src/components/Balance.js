@@ -26,22 +26,39 @@ const Balance = (props) => {
         if (val === 'Balance Zone 0') {
             balancemodel.Address = address
             balancemodel.Zone = 0
+            const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
+            if (result.status == 200) {
+                result.text().then(function (val){
+                    setBalance(val)
+                });
+            }
         } else if (val === 'Balance Zone 1') {
             balancemodel.Address = address
             balancemodel.Zone = 1
+            const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
+            if (result.status == 200) {
+                result.text().then(function (val){
+                    setBalance(val)
+                });
+            }
         } else if (val === 'Balance Zone 2') {
             balancemodel.Address = address
             balancemodel.Zone = 2
+            const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
+            if (result.status == 200) {
+                result.text().then(function (val){
+                    setBalance(val)
+                });
+            }
         } else if (val === 'Balance Zone 3') {
             balancemodel.Address = address
             balancemodel.Zone = 3
-        }
-
-        const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
-        if (result.status == 200) {
-            result.text().then(function (val){
-                setBalance(val)
-            });
+            const result = await apiRequest(Testnet.BALANCE_URL, 'POST', balancemodel, localStorage.getItem("bearer"));
+            if (result.status == 200) {
+                result.text().then(function (val){
+                    setBalance(val)
+                });
+            }
         }
     }
 

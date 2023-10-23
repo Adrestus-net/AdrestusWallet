@@ -53,12 +53,14 @@ function Login() {
         if (formData.email == '' || formData.password == '') {
             setStatus(Status.Reject)
             setErrMessage("Email or password must not be empty please fill in the data")
+            setisloadingBar(false)
             return;
 
         }
         if (myArray12.length == 0 && myArray24.length == 0) {
             setStatus(Status.Reject)
             setErrMessage("You should choose at least choose 12 or 24 words")
+            setisloadingBar(false)
             return;
         }
 
@@ -98,6 +100,7 @@ function Login() {
             const result = await apiRequest(Testnet.LOGIN_URL, 'POST', data);
             if (result == null) {
                 setStatus(Status.Reject)
+                setisloadingBar(false)
                 setErrMessage("Registration is failed please try again later")
                 return
             }
