@@ -18,8 +18,7 @@
     <url>http://maven.apache.org</url>
     <properties>
         <java.version>11</java.version>
-        <adrestus.version>1.0-SNAPSHOT</adrestus.version>
-        <adrestus.core.version>1.1-SNAPSHOT</adrestus.core.version>
+        <adrestus.version>v.0.1.0</adrestus.version>
         <surefire.version>1.3.2</surefire.version>
         <vintage.version>5.8.2</vintage.version>
         <jupiter.version>5.3.0</jupiter.version>
@@ -32,7 +31,12 @@
         <lombok.version>1.18.30</lombok.version>
         <junit.version>5.9.2</junit.version>
     </properties>
-
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -118,53 +122,39 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-api</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-api-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-core</artifactId>
-            <version>${adrestus.core.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/adrestus-core-1.1-SNAPSHOT-jar-with-dependencies.jar</systemPath>-->
+            <version>${adrestus.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-crypto</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-crypto-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-distributed-ledger</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/adrestus-distributed-ledger-1.0-SNAPSHOT-jar-with-dependencies.jar</systemPath>-->
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-util</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-util-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-config</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-config-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
         <dependency>
-            <groupId>io.Adrestus.v1</groupId>
+            <groupId>com.github.Adrestus-net.Adrestus</groupId>
             <artifactId>adrestus-trie</artifactId>
             <version>${adrestus.version}</version>
-<!--            <scope>system</scope>-->
-<!--            <systemPath>${project.basedir}/src/main/resources/original-adrestus-trie-1.0-SNAPSHOT.jar</systemPath>-->
         </dependency>
     </dependencies>
 
@@ -257,113 +247,6 @@
                     <fork>true</fork>
                     <compilerVersion>1.3</compilerVersion>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-install-plugin</artifactId>
-                <version>3.1.1</version>
-                <executions>
-                    <execution>
-                        <id>install0</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>
-                                ${project.basedir}/src/main/resources/adrestus-distributed-ledger-1.0-SNAPSHOT-jar-with-dependencies.jar
-                            </file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-distributed-ledger</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install1</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-api-1.0-SNAPSHOT.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-api</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install2</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-crypto-1.0-SNAPSHOT.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-crypto</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install3</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/adrestus-core-1.1-SNAPSHOT-jar-with-dependencies.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-core</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install4</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-util-1.0-SNAPSHOT.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-util</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install5</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-config-1.0-SNAPSHOT.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-config</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>install6</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>install-file</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/src/main/resources/original-adrestus-trie-1.0-SNAPSHOT.jar</file>
-                            <groupId>io.Adrestus.v1</groupId>
-                            <artifactId>adrestus-trie</artifactId>
-                            <version>${adrestus.version}</version>
-                            <packaging>jar</packaging>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
