@@ -49,8 +49,6 @@ function Dashboard() {
     const [password, setPassword] = useState(state.formData.password)
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
-    const [Arrfrom, setArrfrom] = useState(new Array(0));
-    const [ArrTo, setArrTo] = useState(new Array(0));
     const [amount, setAmount] = useState('')
     const [message, setMessage] = useState('')
     const [stages, setStages] = useState(Stages.Stage1);
@@ -65,7 +63,6 @@ function Dashboard() {
 
 
     const keys = useRef(null);
-    const nonce = useRef(1);
     const timer = useRef();
     const hash = useRef(new window.HashFunction());
     const sign = useRef(new window.ECDSASignature());
@@ -118,11 +115,7 @@ function Dashboard() {
                 const response = await apiRequest(Testnet.TRANSACTION_URL + address, 'GET', null, localStorage.getItem("bearer"));
                 if (!response.ok) throw Error('Did not receive expected data');
                 const listItems = await response.json();
-                nonce.current = listItems.from.length + 1;
-                console.log("Nonce: " + nonce.current)
                 setTransaction(listItems)
-                setArrfrom(listItems.from)
-                setArrTo(listItems.to)
                 setFetchError(null);
             } catch (err) {
                 setFetchError(err.message);
@@ -168,12 +161,9 @@ function Dashboard() {
                         console.log(response)
                         if (!response.ok) throw Error('Did not receive expected data');
                         const listItems = await response.json();
-                        nonce.current = listItems.from.length + 1;
                         console.log(listItems)
                         setTransaction(listItems)
                         //listItems.from.map(val => console.log(JSON.stringify(val)));
-                        setArrfrom(listItems.from)
-                        setArrTo(listItems.to)
                         setFetchError(null);
                     } catch (err) {
                         setFetchError(err.message);
@@ -188,8 +178,6 @@ function Dashboard() {
         return () => {
             clearInterval(timer.current);
             timer.current = null;
-            setArrfrom(new Array(0))
-            setArrTo(new Array(0))
         };
     }, [stages]);
 
@@ -243,7 +231,14 @@ function Dashboard() {
         transactionModel.Status = 'PENDING'
         transactionModel.Timestamp = DateUtil.getTimeInString()
         transactionModel.Hash = ''
-        transactionModel.Nonce = nonce.current
+        let nonce=0;
+        for (let i = 0; i < transaction.from.length; i++) {
+            if(transaction.from[i].zoneFrom==formData.zoneFrom){
+                nonce=nonce+1
+            }
+
+        }
+        transactionModel.Nonce = nonce+1
         transactionModel.BlockNumber = 0
         transactionModel.From = formData.from
         transactionModel.To = formData.to
