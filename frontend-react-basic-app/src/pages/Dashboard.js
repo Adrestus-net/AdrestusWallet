@@ -232,11 +232,13 @@ function Dashboard() {
         transactionModel.Timestamp = DateUtil.getTimeInString()
         transactionModel.Hash = ''
         let nonce=0;
-        for (let i = 0; i < transaction.from.length; i++) {
-            if(transaction.from[i].zoneFrom==formData.zoneFrom){
-                nonce=nonce+1
-            }
+        if(transaction!=null) {
+            for (let i = 0; i < transaction.from.length; i++) {
+                if (transaction.from[i].zoneFrom == formData.zoneFrom) {
+                    nonce = nonce + 1
+                }
 
+            }
         }
         transactionModel.Nonce = nonce+1
         transactionModel.BlockNumber = 0
