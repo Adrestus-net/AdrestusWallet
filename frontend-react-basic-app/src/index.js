@@ -18,7 +18,7 @@ root.render(
                           cookieSecure={false}
                           refresh={refreshApi}>
                 <Routes>
-                    <Route path="*" element={<Navigate to="/Login"/>}/>
+                    <Route path="*" element={<Navigate to="/test"/>}/>
                     <Route exact path="/Register" element={<Register/>}/>
                     <Route exact path="/Login" element={<Login/>}/>
                     <Route exact path="/test" element={<App/>}/>
