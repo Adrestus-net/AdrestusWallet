@@ -7,7 +7,6 @@ import Card from "../../components/card";
 import {useNavigate} from "react-router-dom";
 
 const registerStage3 = (props) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const navigate = useNavigate()
     const {onStage3Submit,status,stages,Message } = props;
     return (

@@ -42,10 +42,10 @@
     "web-vitals": "^3.3.0"
   },
   "scripts": {
-    "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start && set NODE_ENV=dev && node app.js",
+    "start": "react-scripts start && set NODE_ENV=dev && node app.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+    "build": "react-scripts build",
     "test": "jest",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
     "tailwind": "npx tailwindcss -i ./src/index.css -o ./src/css/style.css --watch",
@@ -76,13 +76,12 @@
       "src"
     ]
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ],
-    "rules": {
-      "jsx-a11y/anchor-is-valid": "off"
-    }
+  "rules": {
+    "node/no-deprecated-api": ["error", {
+      "version": ">=8.0.0",
+      "ignoreModuleItems": [],
+      "ignoreGlobalItems": []
+    }]
   },
   "overrides": {
     "@svgr/webpack": "^6.5.1"

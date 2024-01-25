@@ -24875,7 +24875,6 @@ module.exports = RIPEMD160
 
 },{"buffer":63,"hash-base":102,"inherits":132}],160:[function(require,module,exports){
 /*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> */
-/* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
 
@@ -24942,7 +24941,6 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 
 },{"buffer":63}],161:[function(require,module,exports){
 (function (process){(function (){
-/* eslint-disable node/no-deprecated-api */
 
 'use strict'
 
