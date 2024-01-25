@@ -43,9 +43,9 @@
   },
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start && set NODE_ENV=dev && node app.js",
-    "predeploy": "DISABLE_ESLINT_PLUGIN=true npm run build",
-    "deploy": "DISABLE_ESLINT_PLUGIN=true gh-pages -d build",
-    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
     "test": "jest",
     "pretty": "prettier --write \"./**/*.{js,jsx,json}\"",
     "tailwind": "npx tailwindcss -i ./src/index.css -o ./src/css/style.css --watch",
