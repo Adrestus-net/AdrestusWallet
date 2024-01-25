@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/AdrestusWallet/static/css/main.8a0e2751.css",
+    "main.js": "/AdrestusWallet/static/js/main.5458e370.js",
+    "static/media/Debit.png": "/AdrestusWallet/static/media/Debit.aa636780ab9220ff06f3.png",
+    "static/media/Adrestus.png": "/AdrestusWallet/static/media/Adrestus.029d5090feea4964a2a2.png",
+    "index.html": "/AdrestusWallet/index.html",
+    "main.8a0e2751.css.map": "/AdrestusWallet/static/css/main.8a0e2751.css.map",
+    "main.5458e370.js.map": "/AdrestusWallet/static/js/main.5458e370.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8a0e2751.css",
+    "static/js/main.5458e370.js"
+  ]
+}
