@@ -1,3 +1,5 @@
+import JsonUtil from '../util/JsonUtil.js'
+
 const apiRequest = async (url = '', type, data = null, authToken = "", response = null, errMsg = null) => {
     try {
         let response
@@ -12,12 +14,11 @@ const apiRequest = async (url = '', type, data = null, authToken = "", response 
                     //'Access-Control-Allow-Headers': 'x-requested-with, Content-Type, origin, authorization, accept, client-security-token',
                     'Authorization': `Bearer ${authToken}`
                 },
-                body: JSON.stringify(data)
+                body: JsonUtil.isJson(data) ? data : JSON.stringify(data)
             }
             console.log(postOptions.body)
             response = await fetch(url, postOptions);
-        }
-        else {
+        } else {
             const getOptions = {
                 method: type,
                 headers: {
@@ -29,7 +30,7 @@ const apiRequest = async (url = '', type, data = null, authToken = "", response 
                     'Authorization': `Bearer ${authToken}`
                 },
             }
-            response = await fetch(url,getOptions);
+            response = await fetch(url, getOptions);
         }
         return response
     } catch (err) {

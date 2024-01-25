@@ -27,7 +27,6 @@ import LockDashboard from "../components/LockDashboard";
 import Status from "../util/Status";
 import Util from "../crypto/Util";
 import BalanceModel from "../model/BalanceModel";
-
 export const DashBoardContext = createContext();
 
 function Dashboard() {
@@ -62,6 +61,7 @@ function Dashboard() {
     const [darkmode, setDarkmode] = React.useState(document.body.classList.contains("dark"));
 
 
+    const bloom_filter_api = useRef(null);
     const keys = useRef(null);
     const timer = useRef();
     const hash = useRef(new window.HashFunction());
@@ -110,18 +110,6 @@ function Dashboard() {
             keys.current = new window.Keypair(seed);
         }
 
-        const fetchItems = async () => {
-            try {
-                const response = await apiRequest(Testnet.TRANSACTION_URL + address, 'GET', null, localStorage.getItem("bearer"));
-                if (!response.ok) throw Error('Did not receive expected data');
-                const listItems = await response.json();
-                setTransaction(listItems)
-                setFetchError(null);
-            } catch (err) {
-                setFetchError(err.message);
-            } finally {
-            }
-        }
         const fetchBalance = async () => {
             try {
                 const balancemodel = new BalanceModel()
@@ -138,7 +126,6 @@ function Dashboard() {
             } finally {
             }
         }
-        fetchItems()
         fetchBalance()
 
         axios
@@ -150,6 +137,37 @@ function Dashboard() {
                 console.log(res.data);
             })
             .catch((error) => console.log(error));
+
+
+        async function callAsync() {
+            await window.cheerpjInit();
+            const lib = await window.cheerpjRunLibrary("/app/BloomFilter.jar");
+            bloom_filter_api.current=lib
+        }
+        callAsync();
+
+        const fetchItems = async () => {
+            try {
+                const Creation = await bloom_filter_api.current.io.Adrestus.bloom_filter.Creation;
+                const creation = await new Creation();
+                const jsonToSend=await creation.create(address);
+                const response = await apiRequest(Testnet.BLOOM_FILTER_URL, 'GET', jsonToSend, localStorage.getItem("bearer"));
+                if (!response.ok) throw Error('Did not receive expected data');
+                const jsonRes = await response.json();
+                const map=JSON.parse(jsonRes);
+                let myMap = new Map(Object.entries(map));
+                const entry=myMap.get(address);
+                if (entry !== undefined) {
+                    setTransaction(entry)
+                    setFetchError(null);
+                }
+                setFetchError("Transactions fetched from server failed please make sure your browser extensions not overlapped");
+            } catch (err) {
+                setFetchError(err.message);
+            } finally {
+            }
+        }
+        fetchItems()
     }, []);
 
     useEffect(() => {
@@ -157,14 +175,21 @@ function Dashboard() {
             timer.current = setInterval(() => {
                 const fetchItems = async () => {
                     try {
-                        const response = await apiRequest(Testnet.TRANSACTION_URL + address, 'GET', null, localStorage.getItem("bearer"));
+                        const Creation = await bloom_filter_api.current.io.Adrestus.bloom_filter.Creation;
+                        const creation = await new Creation();
+                        const jsonToSend=await creation.create(address);
+                        const response = await apiRequest(Testnet.BLOOM_FILTER_URL, 'GET', jsonToSend, localStorage.getItem("bearer"));
                         console.log(response)
                         if (!response.ok) throw Error('Did not receive expected data');
-                        const listItems = await response.json();
-                        console.log(listItems)
-                        setTransaction(listItems)
-                        //listItems.from.map(val => console.log(JSON.stringify(val)));
-                        setFetchError(null);
+                        const jsonRes = await response.json();
+                        const map=JSON.parse(jsonRes);
+                        let myMap = new Map(Object.entries(map));
+                        const entry=myMap.get(address);
+                        if (entry !== undefined) {
+                            setTransaction(entry)
+                            setFetchError(null);
+                        }
+                        setFetchError("Transactions fetched from server failed please make sure your browser extensions not overlapped");
                     } catch (err) {
                         setFetchError(err.message);
                     } finally {
@@ -340,6 +365,7 @@ function Dashboard() {
 
     return (
         <div className="mt-3 h-full w-full">
+            <div id="mydiv"></div>
             <div
                 className="h-[350px] w-full rounded-[20px] bg-gradient-to-br from-brandLinear to-blueSecondary md:h-[390px]"/>
             <div className="w-md:2/3 mx-auto h-full w-5/6 md:px-3  3xl:w-7/12">

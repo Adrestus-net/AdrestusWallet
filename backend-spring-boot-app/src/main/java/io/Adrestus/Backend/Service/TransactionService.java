@@ -2,9 +2,12 @@ package io.Adrestus.Backend.Service;
 
 import io.Adrestus.Backend.Repository.KVRepository;
 import io.Adrestus.Backend.payload.response.ResponseDao;
+import io.Adrestus.bloom_filter.core.BloomObject;
 import io.Adrestus.core.Transaction;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 
 
 @Service
@@ -25,6 +28,10 @@ public class TransactionService {
 
     public ResponseDao getTransactionsByAddress(String address) {
         return this.KVRepository.getTransactionsByAddress(address);
+    }
+
+    public HashMap<String, ResponseDao> getTransactionsByBloomFilter(BloomObject bloomObject){
+        return this.KVRepository.getTransactionsByBloomFilter(bloomObject);
     }
     public int deleteALL() {
         return this.KVRepository.deleteALL();

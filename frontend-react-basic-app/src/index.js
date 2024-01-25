@@ -7,10 +7,10 @@ import Register from "./pages/Register";
 import refreshApi from "./Services/refreshApi";
 import Dashboard from "./pages/Dashboard";
 import "./index.css";
+import App from "./pages/test";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <React.StrictMode>
         <BrowserRouter>
             <AuthProvider authType={"cookie"}
                           authName={"_auth"}
@@ -21,6 +21,7 @@ root.render(
                     <Route path="*" element={<Navigate to="/Login"/>}/>
                     <Route exact path="/Register" element={<Register/>}/>
                     <Route exact path="/Login" element={<Login/>}/>
+                    <Route exact path="/test" element={<App/>}/>
                     {/*<Route exact path="/View" element={<Dashboard/>}/>*/}
                     {/*<Route exact path="/Dashboard" element={<Dashboard/>}/>*/}
                     {<Route exact path={'/Dashboard'} element={
@@ -32,6 +33,5 @@ root.render(
                 </Routes>
             </AuthProvider>
         </BrowserRouter>
-    </React.StrictMode>
 );
 //browserify src/crypto/Mnemonic.js --standalone myBundle > src/bundle/WalletBundle.js

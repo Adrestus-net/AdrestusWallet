@@ -153,7 +153,7 @@ const ActionButtons = (props) => {
                                 <div className=" rounded-lg border pt-3 w-full flex flex-col gap-3">
                                     <div className="flex flex-row gap-2 justify-center w-full">
                                         <img
-                                            src="test-logo.jpg"
+                                            src="../assets/img/test-logo.jpg"
                                             className="rounded-full w-6 h-6"
                                             alt="logo"
                                         />

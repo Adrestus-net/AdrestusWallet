@@ -3,6 +3,7 @@ package io.Adrestus.Backend.ScheduledTasks;
 
 import com.google.common.reflect.TypeToken;
 import io.Adrestus.Backend.Config.APIConfiguration;
+import io.Adrestus.Backend.MemoryBuffer.AddressMemoryInstance;
 import io.Adrestus.MemoryTreePool;
 import io.Adrestus.TreeFactory;
 import io.Adrestus.core.CommitteeBlock;
@@ -161,6 +162,8 @@ public class SyncTransactionBlockTask {
             if (!blocks.isEmpty()) {
                 blocks.stream().forEach(transactionBlock -> {
                     transactionBlock.getTransactionList().stream().forEach(transaction -> {
+                        AddressMemoryInstance.getInstance().getMemory().add(transaction.getFrom());
+                        AddressMemoryInstance.getInstance().getMemory().add(transaction.getTo());
                         transaction_database.save(transaction.getFrom(), transaction);
                         transaction_database.save(transaction.getTo(), transaction);
                     });

@@ -1,10 +1,11 @@
 package io.Adrestus.Backend.Repository;
 
 import com.google.common.reflect.TypeToken;
+import io.Adrestus.Backend.MemoryBuffer.AddressMemoryInstance;
 import io.Adrestus.Backend.payload.response.ResponseDao;
-import io.Adrestus.api.MessageListener;
-import io.Adrestus.api.Strategy;
-import io.Adrestus.api.TransactionStrategy;
+import io.Adrestus.bloom_filter.BloomFilter;
+import io.Adrestus.bloom_filter.core.BloomObject;
+import io.Adrestus.bloom_filter.impl.InMemoryBloomFilter;
 import io.Adrestus.config.APIConfiguration;
 import io.Adrestus.core.Transaction;
 import io.distributedLedger.DatabaseFactory;
@@ -13,9 +14,7 @@ import io.distributedLedger.IDatabase;
 import io.distributedLedger.LevelDBTransactionWrapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Repository("transactionDao")
@@ -31,11 +30,15 @@ public class TransactionDataAccessRepository implements KVRepository {
 
     @Override
     public String addTransaction(Transaction transaction) {
-        MessageListener messageListener = new MessageListener();
-        Strategy transactionStrategy = new Strategy(new TransactionStrategy(transaction, messageListener));
-        transactionStrategy.SendTransactionSync();
-        if (messageListener.getConsume_list().stream().anyMatch(val -> val.equals(APIConfiguration.MSG_FAILED)))
-            return APIConfiguration.MSG_FAILED;
+        AddressMemoryInstance.getInstance().getMemory().add(transaction.getFrom());
+        AddressMemoryInstance.getInstance().getMemory().add(transaction.getTo());
+        database.save(transaction.getFrom(), transaction);
+        database.save(transaction.getTo(), transaction);
+//        MessageListener messageListener = new MessageListener();
+//        Strategy transactionStrategy = new Strategy(new TransactionStrategy(transaction, messageListener));
+//        transactionStrategy.SendTransactionSync();
+//        if (messageListener.getConsume_list().stream().anyMatch(val -> val.equals(APIConfiguration.MSG_FAILED)))
+//            return APIConfiguration.MSG_FAILED;
         return APIConfiguration.MSG_SUCCESS;
     }
 
@@ -57,6 +60,22 @@ public class TransactionDataAccessRepository implements KVRepository {
             return new ResponseDao(from, to);
         }
         return null;
+    }
+
+    @Override
+    public HashMap<String, ResponseDao> getTransactionsByBloomFilter(BloomObject bloomObject) {
+        HashMap<String, ResponseDao> map = new HashMap<>();
+        BloomFilter<String> match_filter = new InMemoryBloomFilter<String>(bloomObject.getNumBitsRequired(), bloomObject.getHashFunctionNum(), bloomObject.getArray(), null);
+        List<String> buffer = new ArrayList<String>(AddressMemoryInstance.getInstance().getMemory().getResources());
+        for (String val : buffer) {
+            if (!match_filter.contains(val)) {
+                buffer.remove(val);
+            }
+        }
+        buffer.stream().forEach(val -> {
+            map.put(val, this.getTransactionsByAddress(val));
+        });
+        return map;
     }
 
     @Override

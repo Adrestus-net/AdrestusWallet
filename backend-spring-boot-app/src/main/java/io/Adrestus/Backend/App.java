@@ -2,6 +2,7 @@ package io.Adrestus.Backend;
 
 import io.Adrestus.Backend.Config.ConsensusConfiguration;
 import io.Adrestus.Backend.Config.NetworkConfiguration;
+import io.Adrestus.Backend.Config.ResourcesConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -33,6 +34,7 @@ public class App {
         props.put("server.port", "8080");*/
         SpringApplication app = new SpringApplication(App.class);
         app.addListeners(new NetworkConfiguration());
+        app.addListeners(new ResourcesConfiguration());
         app.run(args);
     }
 }
